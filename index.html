@@ -1,1113 +1,1867 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JudeX - Buy & Sell Digital Assets On JudeX</title>
+    <script
+      async
+      src="https://cdn.transak.com/js/sdk/1.4.1/transak.js"
+    ></script>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cryptright - Buy & Sell Digital Assets On Cryptright</title>
-
-  <!-- 
+    <!-- 
     - favicon
   -->
-  
-  <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
 
-  <!-- 
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml" />
+
+    <!-- 
     - custom css link
     <img src="./bitlogo.jpg" width="32" height="32" alt="Cryptex logo">
   -->
-  <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css" />
 
-  <!-- 
+    <!-- 
     - google font link
   -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-</head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#2f324180" />
+  </head>
 
-<body>
-
-  <!-- 
+  <body>
+    <!-- 
     - #HEADER
   -->
 
-  <header class="header" data-header>
-    <div class="container">
+    <header class="header" data-header>
+      <!-- Ticker Banner -->
+      <div class="crypto-ticker">
+        <div id="ticker" class="ticker-content">Loading crypto prices...</div>
+      </div>
 
-      <a href="#" class="logo">
-        <img src="./assets/images/logo.svg" width="32" height="32" alt="Cryptex logo">
-        Cryptright
-      </a>
+      <div class="container">
+        <a href="/" class="logo">
+          <img
+            src="./assets/images/logo.svg"
+            width="32"
+            height="32"
+            alt="JudeX logo"
+          />
+          JudeX
+        </a>
 
-      <nav class="navbar" data-navbar>
-        <ul class="navbar-list">
+        <nav class="navbar" data-navbar>
+          <ul class="navbar-list">
+            <li class="navbar-item">
+              <a href="#" class="navbar-link active" data-nav-link>Home</a>
+            </li>
 
-          <li class="navbar-item">
-            <a href="#" class="navbar-link active" data-nav-link>Home</a>
-          </li>
+            <li class="navbar-item">
+              <button class="navbar-link" id="buyCryptoLink" data-nav-link>
+                Buy Crypto
+              </button>
+            </li>
 
-          <li class="navbar-item">
-            <a href="#" class="navbar-link" data-nav-link>Buy Crypto</a>
-          </li>
+            <li class="navbar-item">
+              <button class="navbar-link" id="sellCryptoLink" data-nav-link>
+                Sell Crypto
+              </button>
+            </li>
 
-          <li class="navbar-item">
-            <a href="#" class="navbar-link" data-nav-link>Markets</a>
-          </li>
+            <li class="navbar-item">
+              <button class="navbar-link" id="swapCryptoLink" data-nav-link>
+                Swap
+              </button>
+            </li>
 
-          <li class="navbar-item">
-            <a href="#" class="navbar-link" data-nav-link>Sell Crypto</a>
-          </li>
+            <li class="navbar-item">
+              <a href="#market-update" class="navbar-link" data-nav-link
+                >Markets</a
+              >
+            </li>
+          </ul>
+        </nav>
 
-          <li class="navbar-item">
-            <a href="#" class="navbar-link" data-nav-link>Blog</a>
-          </li>
+        <button
+          class="nav-toggle-btn"
+          aria-label="Toggle menu"
+          data-nav-toggler
+        >
+          <span class="line line-1"></span>
+          <span class="line line-2"></span>
+          <span class="line line-3"></span>
+        </button>
 
-          <!-- <li class="navbar-item">
-            <a href="#" class="navbar-link" data-nav-link>BITUSDT</a>
-          </li> -->
+        <!-- Buy Crypto Modal -->
+        <div id="buyCryptoModal" class="modal-wrapper">
+          <div class="modal-box">
+            <span class="close-icon">&times;</span>
+            <h2
+              class="modal-heading"
+              style="color: rgb(48, 47, 47); margin-bottom: 4rem"
+            >
+              Buy Crypto with Fiat
+            </h2>
+            <form id="buyCryptoForm">
+              <!-- Crypto Selection -->
+              <label for="cryptoSelect" class="input-label"
+                >Select Crypto</label
+              >
+              <select id="cryptoSelect" class="currency-select">
+                <option value="btc">Bitcoin (BTC)</option>
+                <option value="eth">Ethereum (ETH)</option>
+                <option value="usdt">Tether (USDT)</option>
+                <option value="xrp">Ripple (XRP)</option>
+                <option value="ada">Cardano (ADA)</option>
+                <option value="bnb">Binance Coin (BNB)</option>
+                <option value="sol">Solana (SOL)</option>
+                <option value="doge">Dogecoin (DOGE)</option>
+                <option value="dot">Polkadot (DOT)</option>
+                <option value="ltc">Litecoin (LTC)</option>
+                <option value="shiba">Shiba Inu (SHIB)</option>
+                <option value="matic">Polygon (MATIC)</option>
+                <option value="avalanche">Avalanche (AVAX)</option>
+                <option value="link">Chainlink (LINK)</option>
+                <option value="uniswap">Uniswap (UNI)</option>
+                <option value="ftm">Fantom (FTM)</option>
+                <option value="xlm">Stellar (XLM)</option>
+                <option value="trx">TRON (TRX)</option>
+                <option value="nearnetwork">NEAR Protocol (NEAR)</option>
+                <option value="algo">Algorand (ALGO)</option>
+              </select>
 
-        </ul>
-      </nav>
+              <!-- Fiat Currency Selection with Flag Emojis -->
+              <label for="fiatCurrency" class="input-label"
+                >Select Fiat Currency</label
+              >
+              <select id="fiatCurrency" class="currency-select">
+                <option value="eur">🇪🇺 EUR - Euro</option>
+                <option value="gbp">🇬🇧 GBP - British Pound</option>
+                <option value="inr">🇮🇳 INR - Indian Rupee</option>
+                <option value="usd">🇺🇸 USD - US Dollar</option>
+                <option value="chf">🇨🇭 CHF - Swiss Franc</option>
+                <option value="sek">🇸🇪 SEK - Swedish Krona</option>
+                <option value="pln">🇵🇱 PLN - Polish Zloty</option>
+                <option value="nok">🇳🇴 NOK - Norwegian Krone</option>
+                <option value="dkk">🇩🇰 DKK - Danish Krone</option>
+                <option value="nzd">🇳🇿 NZD - New Zealand Dollar</option>
+                <option value="mxn">🇲🇽 MXN - Mexican Peso</option>
+                <option value="cad">🇨🇦 CAD - Canadian Dollar</option>
+                <option value="aud">🇦🇺 AUD - Australian Dollar</option>
+                <option value="ars">🇦🇷 ARS - Argentine Peso</option>
+                <option value="brl">🇧🇷 BRL - Brazilian Real</option>
+                <option value="clp">🇨🇱 CLP - Chilean Peso</option>
+                <option value="crc">🇨🇷 CRC - Costa Rican Colon</option>
+                <option value="dop">🇩🇴 DOP - Dominican Peso</option>
+                <option value="idr">🇮🇩 IDR - Indonesian Rupiah</option>
+                <option value="ils">🇮🇱 ILS - Israeli Shekel</option>
+                <option value="jpy">🇯🇵 JPY - Japanese Yen</option>
+                <option value="krw">🇰🇷 KRW - South Korean Won</option>
+                <option value="myr">🇲🇾 MYR - Malaysian Ringgit</option>
+                <option value="pyg">🇵🇾 PYG - Paraguayan Guarani</option>
+                <option value="pen">🇵🇪 PEN - Peruvian Sol</option>
+                <option value="php">🇵🇭 PHP - Philippine Peso</option>
+                <option value="sgd">🇸🇬 SGD - Singapore Dollar</option>
+                <option value="fjd">🇫🇯 FJD - Fiji Dollar</option>
+                <option value="huf">🇭🇺 HUF - Forint</option>
+                <option value="kes">🇰🇪 KES - Kenyan Shilling</option>
+                <option value="mdl">🇲🇩 MDL - Moldovan Leu</option>
+                <option value="bmd">🇧🇲 BMD - Bermudian Dollar</option>
+                <option value="fkp">🇫🇰 FKP - Falkland Islands Pound</option>
+                <option value="czk">🇨🇿 CZK - Czech Koruna</option>
+                <option value="isk">🇮🇸 ISK - Iceland Krona</option>
+                <option value="ron">🇷🇴 RON - Romanian Leu</option>
+                <option value="aoa">🇦🇴 AOA - Kwanza</option>
+                <option value="bzd">🇧🇿 BZD - Belize Dollar</option>
+                <option value="bnd">🇧🇳 BND - Brunei Dollar</option>
+                <option value="kmf">🇰🇾 KMF - Comoro Franc</option>
+                <option value="djf">🇩🇯 DJF - Djibouti Franc</option>
+                <option value="xcd">🇬🇩 XCD - East Caribbean Dollar</option>
+                <option value="gel">🇬🇪 GEL - Lari</option>
+                <option value="gtq">🇬🇹 GTQ - Quetzal</option>
+                <option value="hnl">🇭🇳 HNL - Lempira</option>
+                <option value="hkd">🇭🇰 HKD - Hong Kong Dollar</option>
+                <option value="kzt">🇰🇿 KZT - Tenge</option>
+                <option value="kgs">🇰🇬 KGS - Som</option>
+                <option value="mga">🇲🇬 MGA - Malagasy Ariary</option>
+                <option value="mwk">🇲🇼 MWK - Kwacha</option>
+                <option value="mru">🇲🇷 MRU - Ouguiya</option>
+                <option value="omr">🇴🇲 OMR - Rial Omani</option>
+                <option value="pgk">🇵🇬 PGK - Kina</option>
+                <option value="rwf">🇷🇼 RWF - Rwanda Franc</option>
+                <option value="stn">🇸🇹 STN - Dobra</option>
+                <option value="scr">🇸🇨 SCR - Seychelles Rupee</option>
+                <option value="sbd">🇸🇧 SBD - Solomon Islands Dollar</option>
+                <option value="srd">🇸🇷 SRD - Surinam Dollar</option>
+                <option value="szl">🇿🇦 SZL - Lilangeni</option>
+                <option value="tjs">🇹🇯 TJS - Somoni</option>
+                <option value="top">🇹🇴 TOP - Pa’anga</option>
+                <option value="tmt">🇹🇲 TMT - Turkmenistan New Manat</option>
+                <option value="uyu">🇺🇾 UYU - Peso Uruguayo</option>
+                <option value="cop">🇨🇴 COP - Colombian Peso</option>
+                <option value="twd">🇹🇼 TWD - Taiwanese Dollar</option>
+                <option value="ghs">🇬🇭 GHS - Ghanaian Cedi</option>
+                <option value="khr">🇰🇭 KHR - Cambodian Riel</option>
+                <option value="rsd">🇷🇸 RSD - Serbian Dinar</option>
+                <option value="bhd">🇧🇭 BHD - Bahraini Dinar</option>
+                <option value="mkd">🇲🇰 MKD - Macedonian Denar</option>
+                <option value="kwd">🇰🇼 KWD - Kuwaiti Dinar</option>
+                <option value="amd">🇦🇲 AMD - Armenian Dram</option>
+                <option value="ang">
+                  🇦🇼 ANG - Netherlands Antilles Guilder
+                </option>
+                <option value="azn">🇦🇿 AZN - Azerbaijani Manat</option>
+                <option value="bsd">🇧🇸 BSD - Bahamian Dollar</option>
+                <option value="kyd">🇰🇾 KYD - Cayman Islands Dollar</option>
+                <option value="cve">🇨🇻 CVE - Cape Verdean Escudo</option>
+                <option value="bam">🇧🇦 BAM - BH Convertible Mark</option>
+                <option value="jod">🇯🇴 JOD - Jordanian Dinar</option>
+                <option value="ttd">🇹🇹 TTD - Trinidad & Tobago Dollar</option>
+                <option value="pab">🇵🇦 PAB - Panamanian Balboa</option>
+                <option value="dzd">🇩🇿 DZD - Algerian Dinar</option>
+              </select>
 
-      <button class="nav-toggle-btn" aria-label="Toggle menu" data-nav-toggler>
-        <span class="line line-1"></span>
-        <span class="line line-2"></span>
-        <span class="line line-3"></span>
-      </button>
+              <label for="fiatAmount" class="input-label">Amount in Fiat</label>
+              <input
+                type="number"
+                id="fiatAmount"
+                class="input-field"
+                placeholder="Enter amount in USD"
+                required
+              />
 
-      <a href="#" class="btn btn-outline">Wallet</a>
+              <!-- Display the markup fee here -->
+              <p id="markupFeeDisplay" style="font-size: 16px; color: #555"></p>
 
-    </div>
-  </header>
+              <button
+                type="submit"
+                id="buyButton"
+                class="purchase-btn"
+                onclick="  launchTransak('BUY');"
+              >
+                Buy Now
+              </button>
+            </form>
+          </div>
+        </div>
 
+        <!-- Sell Crypto Modal -->
+        <div id="sellCryptoModal" class="modal-wrapper">
+          <div class="modal-box">
+            <span class="close-icon" data-sell-close>&times;</span>
+            <h2
+              class="modal-heading"
+              class="modal-heading"
+              style="color: rgb(48, 47, 47); margin-bottom: 4rem"
+            >
+              Sell Crypto for Fiat
+            </h2>
+            <form id="sellCryptoForm">
+              <!-- Crypto Selection -->
+              <label for="sellCryptoSelect" class="input-label"
+                >Select Crypto</label
+              >
+              <select id="sellCryptoSelect" class="currency-select">
+                <option value="btc">Bitcoin (BTC)</option>
+                <option value="eth">Ethereum (ETH)</option>
+                <option value="usdt">Tether (USDT)</option>
+                <option value="xrp">Ripple (XRP)</option>
+                <option value="ada">Cardano (ADA)</option>
+                <option value="bnb">Binance Coin (BNB)</option>
+                <option value="sol">Solana (SOL)</option>
+                <option value="doge">Dogecoin (DOGE)</option>
+                <option value="dot">Polkadot (DOT)</option>
+                <option value="ltc">Litecoin (LTC)</option>
+                <option value="shiba">Shiba Inu (SHIB)</option>
+                <option value="matic">Polygon (MATIC)</option>
+                <option value="avalanche">Avalanche (AVAX)</option>
+                <option value="link">Chainlink (LINK)</option>
+                <option value="uniswap">Uniswap (UNI)</option>
+                <option value="ftm">Fantom (FTM)</option>
+                <option value="xlm">Stellar (XLM)</option>
+                <option value="trx">TRON (TRX)</option>
+                <option value="nearnetwork">NEAR Protocol (NEAR)</option>
+                <option value="algo">Algorand (ALGO)</option>
+              </select>
 
+              <label for="sellFiatCurrency" class="input-label">
+                Select Fiat Currency
+              </label>
+              <select id="sellFiatCurrency" class="currency-select">
+                <option value="eur">🇪🇺 EUR - Euro</option>
+                <option value="gbp">🇬🇧 GBP - British Pound</option>
+                <option value="inr">🇮🇳 INR - Indian Rupee</option>
+                <option value="usd">🇺🇸 USD - US Dollar</option>
+                <option value="chf">🇨🇭 CHF - Swiss Franc</option>
+                <option value="sek">🇸🇪 SEK - Swedish Krona</option>
+                <option value="pln">🇵🇱 PLN - Polish Zloty</option>
+                <option value="nok">🇳🇴 NOK - Norwegian Krone</option>
+                <option value="dkk">🇩🇰 DKK - Danish Krone</option>
+                <option value="nzd">🇳🇿 NZD - New Zealand Dollar</option>
+                <option value="mxn">🇲🇽 MXN - Mexican Peso</option>
+                <option value="cad">🇨🇦 CAD - Canadian Dollar</option>
+                <option value="aud">🇦🇺 AUD - Australian Dollar</option>
+                <option value="ars">🇦🇷 ARS - Argentine Peso</option>
+                <option value="brl">🇧🇷 BRL - Brazilian Real</option>
+                <option value="clp">🇨🇱 CLP - Chilean Peso</option>
+                <option value="crc">🇨🇷 CRC - Costa Rican Colon</option>
+                <option value="dop">🇩🇴 DOP - Dominican Peso</option>
+                <option value="idr">🇮🇩 IDR - Indonesian Rupiah</option>
+                <option value="ils">🇮🇱 ILS - Israeli Shekel</option>
+                <option value="jpy">🇯🇵 JPY - Japanese Yen</option>
+                <option value="krw">🇰🇷 KRW - South Korean Won</option>
+                <option value="myr">🇲🇾 MYR - Malaysian Ringgit</option>
+                <option value="pyg">🇵🇾 PYG - Paraguayan Guarani</option>
+                <option value="pen">🇵🇪 PEN - Peruvian Sol</option>
+                <option value="php">🇵🇭 PHP - Philippine Peso</option>
+                <option value="sgd">🇸🇬 SGD - Singapore Dollar</option>
+                <option value="fjd">🇫🇯 FJD - Fiji Dollar</option>
+                <option value="huf">🇭🇺 HUF - Forint</option>
+                <option value="kes">🇰🇪 KES - Kenyan Shilling</option>
+                <option value="mdl">🇲🇩 MDL - Moldovan Leu</option>
+                <option value="bmd">🇧🇲 BMD - Bermudian Dollar</option>
+                <option value="fkp">🇫🇰 FKP - Falkland Islands Pound</option>
+                <option value="czk">🇨🇿 CZK - Czech Koruna</option>
+                <option value="isk">🇮🇸 ISK - Iceland Krona</option>
+                <option value="ron">🇷🇴 RON - Romanian Leu</option>
+                <option value="aoa">🇦🇴 AOA - Kwanza</option>
+                <option value="bzd">🇧🇿 BZD - Belize Dollar</option>
+                <option value="bnd">🇧🇳 BND - Brunei Dollar</option>
+                <option value="kmf">🇰🇾 KMF - Comoro Franc</option>
+                <option value="djf">🇩🇯 DJF - Djibouti Franc</option>
+                <option value="xcd">🇬🇩 XCD - East Caribbean Dollar</option>
+                <option value="gel">🇬🇪 GEL - Lari</option>
+                <option value="gtq">🇬🇹 GTQ - Quetzal</option>
+                <option value="hnl">🇭🇳 HNL - Lempira</option>
+                <option value="hkd">🇭🇰 HKD - Hong Kong Dollar</option>
+                <option value="kzt">🇰🇿 KZT - Tenge</option>
+                <option value="kgs">🇰🇬 KGS - Som</option>
+                <option value="mga">🇲🇬 MGA - Malagasy Ariary</option>
+                <option value="mwk">🇲🇼 MWK - Kwacha</option>
+                <option value="mru">🇲🇷 MRU - Ouguiya</option>
+                <option value="omr">🇴🇲 OMR - Rial Omani</option>
+                <option value="pgk">🇵🇬 PGK - Kina</option>
+                <option value="rwf">🇷🇼 RWF - Rwanda Franc</option>
+                <option value="stn">🇸🇹 STN - Dobra</option>
+                <option value="scr">🇸🇨 SCR - Seychelles Rupee</option>
+                <option value="sbd">🇸🇧 SBD - Solomon Islands Dollar</option>
+                <option value="srd">🇸🇷 SRD - Surinam Dollar</option>
+                <option value="szl">🇿🇦 SZL - Lilangeni</option>
+                <option value="tjs">🇹🇯 TJS - Somoni</option>
+                <option value="top">🇹🇴 TOP - Pa’anga</option>
+                <option value="tmt">🇹🇲 TMT - Turkmenistan New Manat</option>
+                <option value="uyu">🇺🇾 UYU - Peso Uruguayo</option>
+                <option value="cop">🇨🇴 COP - Colombian Peso</option>
+                <option value="twd">🇹🇼 TWD - Taiwanese Dollar</option>
+                <option value="ghs">🇬🇭 GHS - Ghanaian Cedi</option>
+                <option value="khr">🇰🇭 KHR - Cambodian Riel</option>
+                <option value="rsd">🇷🇸 RSD - Serbian Dinar</option>
+                <option value="bhd">🇧🇭 BHD - Bahraini Dinar</option>
+                <option value="mkd">🇲🇰 MKD - Macedonian Denar</option>
+                <option value="kwd">🇰🇼 KWD - Kuwaiti Dinar</option>
+                <option value="amd">🇦🇲 AMD - Armenian Dram</option>
+                <option value="ang">
+                  🇦🇼 ANG - Netherlands Antilles Guilder
+                </option>
+                <option value="azn">🇦🇿 AZN - Azerbaijani Manat</option>
+                <option value="bsd">🇧🇸 BSD - Bahamian Dollar</option>
+                <option value="kyd">🇰🇾 KYD - Cayman Islands Dollar</option>
+                <option value="cve">🇨🇻 CVE - Cape Verdean Escudo</option>
+                <option value="bam">🇧🇦 BAM - BH Convertible Mark</option>
+                <option value="jod">🇯🇴 JOD - Jordanian Dinar</option>
+                <option value="ttd">🇹🇹 TTD - Trinidad & Tobago Dollar</option>
+                <option value="pab">🇵🇦 PAB - Panamanian Balboa</option>
+                <option value="dzd">🇩🇿 DZD - Algerian Dinar</option>
+              </select>
 
+              <label for="cryptoAmount" class="input-label">
+                Amount of Crypto to Sell
+              </label>
+              <input
+                type="number"
+                id="cryptoAmount"
+                class="input-field"
+                placeholder="e.g. 0.1"
+                step="any"
+                required
+              />
 
+              <button
+                type="submit"
+                id="sellButton"
+                class="purchase-btn"
+                onclick="launchTransak('SELL');"
+              >
+                Sell Now
+              </button>
+            </form>
+          </div>
+        </div>
 
-  <main>
-    <article>
+        <!-- Swap Crypto Modal -->
+        <div id="swapCryptoModal" class="modal-wrapper">
+          <div class="modal-box">
+            <span class="close-icon" data-swap-close>&times;</span>
+            <h2
+              class="modal-heading"
+              style="margin-bottom: 4rem; color: rgb(48, 47, 47)"
+            >
+              Swap Tokens
+            </h2>
+            <form id="swapForm">
+              <label for="sellToken" class="input-label">Sell Token</label>
+              <select id="sellToken" class="currency-select">
+                <option value="DAI">DAI</option>
+                <option value="USDC">USDC</option>
+                <option value="WETH">WETH</option>
+              </select>
 
-      <!-- 
+              <label for="sellAmount" class="input-label">Amount to Sell</label>
+              <input
+                type="number"
+                id="sellAmount"
+                class="input-field"
+                placeholder="e.g. 10"
+                step="any"
+                required
+              />
+
+              <label for="buyToken" class="input-label">Buy Token</label>
+              <select id="buyToken" class="currency-select">
+                <option value="USDC">USDC</option>
+                <option value="DAI">DAI</option>
+                <option value="WETH">WETH</option>
+              </select>
+
+              <p id="swapQuoteInfo" style="margin: 1rem 0; color: #333"></p>
+
+              <button type="button" id="getSwapQuoteBtn" class="purchase-btn">
+                Get Quote
+              </button>
+              <button
+                type="button"
+                id="executeSwapBtn"
+                class="purchase-btn"
+                style="display: none"
+              >
+                Confirm & Swap
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Wallet Modal -->
+        <div class="wallet-wrapper">
+          <button class="btn btn-outline" id="wallet-btn">Wallet</button>
+
+          <div id="wallet-modal" class="wallet-modal" style="display: none">
+            <div class="modal-content">
+              <span id="close-btn" class="close-btn">&times;</span>
+              <h2
+                style="
+                  margin-top: 2rem;
+                  color: rgb(48, 47, 47);
+                  margin-bottom: 2rem;
+                "
+              >
+                Connect Your Wallet
+              </h2>
+
+              <div class="wallet-buttons">
+                <button id="connect-eth" class="wallet-icon-btn">
+                  <img src="/assets/images/eth.png" alt="Ethereum" /> Ethereum
+                </button>
+                <button id="connect-sol" class="wallet-icon-btn">
+                  <img src="/assets/images/sol.jpg" alt="Solana" /> Solana
+                </button>
+              </div>
+
+              <div id="wallet-info" style="display: none; margin-top: 10px">
+                <div id="wallet-address">Wallet Address: Not Connected</div>
+                <div id="wallet-balance">Balance: 0</div>
+              </div>
+              <button
+                id="disconnect-btn"
+                class="btn btn-danger"
+                style="display: none; margin-top: 10px"
+              >
+                Disconnect Wallet
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <article>
+        <!-- 
         - #HERO
       -->
 
-      <section class="section hero" aria-label="hero" data-section>
-        <div class="container">
+        <section class="section hero" aria-label="hero" data-section>
+          <div class="container">
+            <div class="hero-content">
+              <h1 class="h1 hero-title">Buy & Sell Digital Assets On JudeX</h1>
 
-          <div class="hero-content">
+              <p class="hero-text">
+                JudeX is the easiest, safest, and fastest way to buy & sell
+                crypto asset exchange.
+              </p>
 
-            <h1 class="h1 hero-title">Buy & Sell Digital Assets On Cryptright</h1>
+              <a href="#how-it-works" class="btn btn-primary">Get started</a>
+            </div>
 
-            <p class="hero-text">
-              Cryptright is the easiest, safest, and fastest way to buy & sell crypto asset exchange.
-            </p>
-
-            <a href="#" class="btn btn-primary">Get started</a>
-
+            <figure class="hero-banner">
+              <img
+                src="./assets/images/hero-banner.png"
+                width="570"
+                height="448"
+                alt="hero banner"
+                class="w-100"
+              />
+            </figure>
           </div>
+        </section>
 
-          <figure class="hero-banner">
-            <img src="./assets/images/hero-banner.png" width="570" height="448" alt="hero banner" class="w-100">
-          </figure>
-
-        </div>
-      </section>
-
-
-
-
-
-      <!-- 
+        <!-- 
         - #TREND
       -->
 
-      <section class="section trend" aria-label="crypto trend" data-section>
-        <div class="container">
+        <section class="section trend" aria-label="crypto trend" data-section>
+          <div class="container">
+            <div class="trend-tab">
+              <ul class="tab-nav">
+                <li>
+                  <button class="tab-btn active">Crypto</button>
+                </li>
 
-          <div class="trend-tab">
+                <li>
+                  <button class="tab-btn">DeFi</button>
+                </li>
 
-            <ul class="tab-nav">
+                <li>
+                  <button class="tab-btn">BSC</button>
+                </li>
 
-              <li>
-                <button class="tab-btn active">Crypto</button>
-              </li>
+                <li>
+                  <button class="tab-btn">NFT</button>
+                </li>
 
-              <li>
-                <button class="tab-btn">DeFi</button>
-              </li>
+                <li>
+                  <button class="tab-btn">Metaverse</button>
+                </li>
 
-              <li>
-                <button class="tab-btn">BSC</button>
-              </li>
+                <li>
+                  <button class="tab-btn">Polkadot</button>
+                </li>
 
-              <li>
-                <button class="tab-btn">NFT</button>
-              </li>
+                <li>
+                  <button class="tab-btn">Solana</button>
+                </li>
 
-              <li>
-                <button class="tab-btn">Metaverse</button>
-              </li>
+                <li>
+                  <button class="tab-btn">Opensea</button>
+                </li>
 
-              <li>
-                <button class="tab-btn">Polkadot</button>
-              </li>
+                <li>
+                  <button class="tab-btn">Makersplace</button>
+                </li>
+              </ul>
 
-              <li>
-                <button class="tab-btn">Solana</button>
-              </li>
+              <ul class="tab-content">
+                <li>
+                  <div class="trend-card">
+                    <div class="card-title-wrapper">
+                      <img
+                        src="./assets/images/coin-1.svg"
+                        width="24"
+                        height="24"
+                        alt="bitcoin logo"
+                      />
 
-              <li>
-                <button class="tab-btn">Opensea</button>
-              </li>
+                      <a href="#" class="card-title">
+                        Bitcoin <span class="span">BTC/USD</span>
+                      </a>
+                    </div>
 
-              <li>
-                <button class="tab-btn">Makersplace</button>
-              </li>
+                    <data class="card-value" value="46168.95"
+                      >USD 46,168.95</data
+                    >
 
-            </ul>
+                    <div class="card-analytics">
+                      <data class="current-price" value="36641.20"
+                        >36,641.20</data
+                      >
 
-            <ul class="tab-content">
-
-              <li>
-                <div class="trend-card">
-
-                  <div class="card-title-wrapper">
-                    <img src="./assets/images/coin-1.svg" width="24" height="24" alt="bitcoin logo">
-
-                    <a href="#" class="card-title">
-                      Bitcoin <span class="span">BTC/USD</span>
-                    </a>
+                      <div class="badge red">-0.79%</div>
+                    </div>
                   </div>
+                </li>
 
-                  <data class="card-value" value="46168.95">USD 46,168.95</data>
+                <li>
+                  <div class="trend-card active">
+                    <div class="card-title-wrapper">
+                      <img
+                        src="./assets/images/coin-2.svg"
+                        width="24"
+                        height="24"
+                        alt="ethereum logo"
+                      />
 
-                  <div class="card-analytics">
-                    <data class="current-price" value="36641.20">36,641.20</data>
+                      <a href="#" class="card-title">
+                        Ethereum <span class="span">ETH/USD</span>
+                      </a>
+                    </div>
 
-                    <div class="badge red">-0.79%</div>
+                    <data class="card-value" value="3480.04">USD 3,480.04</data>
+
+                    <div class="card-analytics">
+                      <data class="current-price" value="36641.20"
+                        >36,641.20</data
+                      >
+
+                      <div class="badge green">+10.55%</div>
+                    </div>
                   </div>
+                </li>
 
-                </div>
-              </li>
+                <li>
+                  <div class="trend-card">
+                    <div class="card-title-wrapper">
+                      <img
+                        src="./assets/images/coin-3.svg"
+                        width="24"
+                        height="24"
+                        alt="tether logo"
+                      />
 
-              <li>
-                <div class="trend-card active">
+                      <a href="#" class="card-title">
+                        Tether <span class="span">USDT/USD</span>
+                      </a>
+                    </div>
 
-                  <div class="card-title-wrapper">
-                    <img src="./assets/images/coin-2.svg" width="24" height="24" alt="ethereum logo">
+                    <data class="card-value" value="1.00">USD 1.00</data>
 
-                    <a href="#" class="card-title">
-                      Ethereum <span class="span">ETH/USD</span>
-                    </a>
+                    <div class="card-analytics">
+                      <data class="current-price" value="36641.20"
+                        >36,641.20</data
+                      >
+
+                      <div class="badge red">-0.01%</div>
+                    </div>
                   </div>
+                </li>
 
-                  <data class="card-value" value="3480.04">USD 3,480.04</data>
+                <li>
+                  <div class="trend-card">
+                    <div class="card-title-wrapper">
+                      <img
+                        src="./assets/images/coin-4.svg"
+                        width="24"
+                        height="24"
+                        alt="bnb logo"
+                      />
 
-                  <div class="card-analytics">
-                    <data class="current-price" value="36641.20">36,641.20</data>
+                      <a href="#" class="card-title">
+                        BNB <span class="span">BNB/USD</span>
+                      </a>
+                    </div>
 
-                    <div class="badge green">+10.55%</div>
+                    <data class="card-value" value="443.56">USD 443.56</data>
+
+                    <div class="card-analytics">
+                      <data class="current-price" value="36641.20"
+                        >36,641.20</data
+                      >
+
+                      <div class="badge red">-1.24%</div>
+                    </div>
                   </div>
-
-                </div>
-              </li>
-
-              <li>
-                <div class="trend-card">
-
-                  <div class="card-title-wrapper">
-                    <img src="./assets/images/coin-3.svg" width="24" height="24" alt="tether logo">
-
-                    <a href="#" class="card-title">
-                      Tether <span class="span">USDT/USD</span>
-                    </a>
-                  </div>
-
-                  <data class="card-value" value="1.00">USD 1.00</data>
-
-                  <div class="card-analytics">
-                    <data class="current-price" value="36641.20">36,641.20</data>
-
-                    <div class="badge red">-0.01%</div>
-                  </div>
-
-                </div>
-              </li>
-
-              <li>
-                <div class="trend-card">
-
-                  <div class="card-title-wrapper">
-                    <img src="./assets/images/coin-4.svg" width="24" height="24" alt="bnb logo">
-
-                    <a href="#" class="card-title">
-                      BNB <span class="span">BNB/USD</span>
-                    </a>
-                  </div>
-
-                  <data class="card-value" value="443.56">USD 443.56</data>
-
-                  <div class="card-analytics">
-                    <data class="current-price" value="36641.20">36,641.20</data>
-
-                    <div class="badge red">-1.24%</div>
-                  </div>
-
-                </div>
-              </li>
-
-            </ul>
-
+                </li>
+              </ul>
+            </div>
           </div>
+        </section>
 
-        </div>
-      </section>
-
-
-
-
-
-      <!-- 
+        <!-- 
         - #MARKET
       -->
 
-      <section class="section market" aria-label="market update" data-section>
-        <div class="container">
+        <section
+          id="market-update"
+          class="section market"
+          aria-label="market update"
+          data-section
+        >
+          <div class="container">
+            <div class="title-wrapper">
+              <h2 class="h2 section-title">Market Update</h2>
 
-          <div class="title-wrapper">
-            <h2 class="h2 section-title">Market Update</h2>
+              <a href="#" class="btn-link">See All Coins</a>
+            </div>
 
-            <a href="#" class="btn-link">See All Coins</a>
+            <div class="market-tab">
+              <ul class="tab-nav">
+                <li>
+                  <button class="tab-btn active">View All</button>
+                </li>
+
+                <li>
+                  <button class="tab-btn">Metaverse</button>
+                </li>
+
+                <li>
+                  <button class="tab-btn">Entertainment</button>
+                </li>
+
+                <li>
+                  <button class="tab-btn">Energy</button>
+                </li>
+
+                <li>
+                  <button class="tab-btn">NFT</button>
+                </li>
+
+                <li>
+                  <button class="tab-btn">Gaming</button>
+                </li>
+
+                <li>
+                  <button class="tab-btn">Music</button>
+                </li>
+              </ul>
+
+              <table class="market-table">
+                <thead class="table-head">
+                  <tr class="table-row table-title">
+                    <th class="table-heading"></th>
+
+                    <th class="table-heading" scope="col">#</th>
+
+                    <th class="table-heading" scope="col">Name</th>
+
+                    <th class="table-heading" scope="col">Last Price</th>
+
+                    <th class="table-heading" scope="col">24h %</th>
+
+                    <th class="table-heading" scope="col">Market Cap</th>
+
+                    <th class="table-heading" scope="col">Last 7 Days</th>
+
+                    <th class="table-heading"></th>
+                  </tr>
+                </thead>
+
+                <tbody class="table-body">
+                  <tr class="table-row">
+                    <td class="table-data">
+                      <button
+                        class="add-to-fav"
+                        aria-label="Add to favourite"
+                        data-add-to-fav
+                      >
+                        <ion-icon
+                          name="star-outline"
+                          aria-hidden="true"
+                          class="icon-outline"
+                        ></ion-icon>
+                        <ion-icon
+                          name="star"
+                          aria-hidden="true"
+                          class="icon-fill"
+                        ></ion-icon>
+                      </button>
+                    </td>
+
+                    <th class="table-data rank" scope="row">1</th>
+
+                    <td class="table-data">
+                      <div class="wrapper">
+                        <img
+                          src="./assets/images/coin-1.svg"
+                          width="20"
+                          height="20"
+                          alt="Bitcoin logo"
+                          class="img"
+                        />
+
+                        <h3>
+                          <a href="#" class="coin-name"
+                            >Bitcoin <span class="span">BTC</span></a
+                          >
+                        </h3>
+                      </div>
+                    </td>
+
+                    <td class="table-data last-price">$56,623.54</td>
+
+                    <td class="table-data last-update green">+1.45%</td>
+
+                    <td class="table-data market-cap">$880,423,640,582</td>
+
+                    <td class="table-data">
+                      <img
+                        src="./assets/images/chart-1.svg"
+                        width="100"
+                        height="40"
+                        alt="profit chart"
+                        class="chart"
+                      />
+                    </td>
+
+                    <td class="table-data">
+                      <button class="btn btn-outline">Trade</button>
+                    </td>
+                  </tr>
+
+                  <tr class="table-row">
+                    <td class="table-data">
+                      <button
+                        class="add-to-fav"
+                        aria-label="Add to favourite"
+                        data-add-to-fav
+                      >
+                        <ion-icon
+                          name="star-outline"
+                          aria-hidden="true"
+                          class="icon-outline"
+                        ></ion-icon>
+                        <ion-icon
+                          name="star"
+                          aria-hidden="true"
+                          class="icon-fill"
+                        ></ion-icon>
+                      </button>
+                    </td>
+
+                    <th class="table-data rank" scope="row">2</th>
+
+                    <td class="table-data">
+                      <div class="wrapper">
+                        <img
+                          src="./assets/images/coin-2.svg"
+                          width="20"
+                          height="20"
+                          alt="Ethereum logo"
+                          class="img"
+                        />
+
+                        <h3>
+                          <a href="#" class="coin-name"
+                            >Ethereum <span class="span">ETH</span></a
+                          >
+                        </h3>
+                      </div>
+                    </td>
+
+                    <td class="table-data last-price">$56,623.54</td>
+
+                    <td class="table-data last-update red">-5.12%</td>
+
+                    <td class="table-data market-cap">$880,423,640,582</td>
+
+                    <td class="table-data">
+                      <img
+                        src="./assets/images/chart-2.svg"
+                        width="100"
+                        height="40"
+                        alt="loss chart"
+                        class="chart"
+                      />
+                    </td>
+
+                    <td class="table-data">
+                      <button class="btn btn-outline">Trade</button>
+                    </td>
+                  </tr>
+
+                  <tr class="table-row">
+                    <td class="table-data">
+                      <button
+                        class="add-to-fav"
+                        aria-label="Add to favourite"
+                        data-add-to-fav
+                      >
+                        <ion-icon
+                          name="star-outline"
+                          aria-hidden="true"
+                          class="icon-outline"
+                        ></ion-icon>
+                        <ion-icon
+                          name="star"
+                          aria-hidden="true"
+                          class="icon-fill"
+                        ></ion-icon>
+                      </button>
+                    </td>
+
+                    <th class="table-data rank" scope="row">3</th>
+
+                    <td class="table-data">
+                      <div class="wrapper">
+                        <img
+                          src="./assets/images/coin-3.svg"
+                          width="20"
+                          height="20"
+                          alt="Tether logo"
+                          class="img"
+                        />
+
+                        <h3>
+                          <a href="#" class="coin-name"
+                            >Tether <span class="span">USDT/USD</span></a
+                          >
+                        </h3>
+                      </div>
+                    </td>
+
+                    <td class="table-data last-price">$56,623.54</td>
+
+                    <td class="table-data last-update green">+1.45%</td>
+
+                    <td class="table-data market-cap">$880,423,640,582</td>
+
+                    <td class="table-data">
+                      <img
+                        src="./assets/images/chart-1.svg"
+                        width="100"
+                        height="40"
+                        alt="profit chart"
+                        class="chart"
+                      />
+                    </td>
+
+                    <td class="table-data">
+                      <button class="btn btn-outline">Trade</button>
+                    </td>
+                  </tr>
+
+                  <tr class="table-row">
+                    <td class="table-data">
+                      <button
+                        class="add-to-fav"
+                        aria-label="Add to favourite"
+                        data-add-to-fav
+                      >
+                        <ion-icon
+                          name="star-outline"
+                          aria-hidden="true"
+                          class="icon-outline"
+                        ></ion-icon>
+                        <ion-icon
+                          name="star"
+                          aria-hidden="true"
+                          class="icon-fill"
+                        ></ion-icon>
+                      </button>
+                    </td>
+
+                    <th class="table-data rank" scope="row">4</th>
+
+                    <td class="table-data">
+                      <div class="wrapper">
+                        <img
+                          src="./assets/images/coin-4.svg"
+                          width="20"
+                          height="20"
+                          alt="BNB logo"
+                          class="img"
+                        />
+
+                        <h3>
+                          <a href="#" class="coin-name"
+                            >BNB <span class="span">BNB/USD</span></a
+                          >
+                        </h3>
+                      </div>
+                    </td>
+
+                    <td class="table-data last-price">$56,623.54</td>
+
+                    <td class="table-data last-update red">-3.75%%</td>
+
+                    <td class="table-data market-cap">$880,423,640,582</td>
+
+                    <td class="table-data">
+                      <img
+                        src="./assets/images/chart-2.svg"
+                        width="100"
+                        height="40"
+                        alt="loss chart"
+                        class="chart"
+                      />
+                    </td>
+
+                    <td class="table-data">
+                      <button class="btn btn-outline">Trade</button>
+                    </td>
+                  </tr>
+
+                  <tr class="table-row">
+                    <td class="table-data">
+                      <button
+                        class="add-to-fav"
+                        aria-label="Add to favourite"
+                        data-add-to-fav
+                      >
+                        <ion-icon
+                          name="star-outline"
+                          aria-hidden="true"
+                          class="icon-outline"
+                        ></ion-icon>
+                        <ion-icon
+                          name="star"
+                          aria-hidden="true"
+                          class="icon-fill"
+                        ></ion-icon>
+                      </button>
+                    </td>
+
+                    <th class="table-data rank" scope="row">5</th>
+
+                    <td class="table-data">
+                      <div class="wrapper">
+                        <img
+                          src="./assets/images/coin-5.svg"
+                          width="20"
+                          height="20"
+                          alt="Solana logo"
+                          class="img"
+                        />
+
+                        <h3>
+                          <a href="#" class="coin-name"
+                            >Solana <span class="span">SOL</span></a
+                          >
+                        </h3>
+                      </div>
+                    </td>
+
+                    <td class="table-data last-price">$56,623.54</td>
+
+                    <td class="table-data last-update green">+1.45%</td>
+
+                    <td class="table-data market-cap">$880,423,640,582</td>
+
+                    <td class="table-data">
+                      <img
+                        src="./assets/images/chart-1.svg"
+                        width="100"
+                        height="40"
+                        alt="profit chart"
+                        class="chart"
+                      />
+                    </td>
+
+                    <td class="table-data">
+                      <button class="btn btn-outline">Trade</button>
+                    </td>
+                  </tr>
+
+                  <tr class="table-row">
+                    <td class="table-data">
+                      <button
+                        class="add-to-fav"
+                        aria-label="Add to favourite"
+                        data-add-to-fav
+                      >
+                        <ion-icon
+                          name="star-outline"
+                          aria-hidden="true"
+                          class="icon-outline"
+                        ></ion-icon>
+                        <ion-icon
+                          name="star"
+                          aria-hidden="true"
+                          class="icon-fill"
+                        ></ion-icon>
+                      </button>
+                    </td>
+
+                    <th class="table-data rank" scope="row">6</th>
+
+                    <td class="table-data">
+                      <div class="wrapper">
+                        <img
+                          src="./assets/images/coin-6.svg"
+                          width="20"
+                          height="20"
+                          alt="XRP logo"
+                          class="img"
+                        />
+
+                        <h3>
+                          <a href="#" class="coin-name"
+                            >XRP <span class="span">XRP</span></a
+                          >
+                        </h3>
+                      </div>
+                    </td>
+
+                    <td class="table-data last-price">$56,623.54</td>
+
+                    <td class="table-data last-update red">-2.22%</td>
+
+                    <td class="table-data market-cap">$880,423,640,582</td>
+
+                    <td class="table-data">
+                      <img
+                        src="./assets/images/chart-2.svg"
+                        width="100"
+                        height="40"
+                        alt="loss chart"
+                        class="chart"
+                      />
+                    </td>
+
+                    <td class="table-data">
+                      <button class="btn btn-outline">Trade</button>
+                    </td>
+                  </tr>
+
+                  <tr class="table-row">
+                    <td class="table-data">
+                      <button
+                        class="add-to-fav"
+                        aria-label="Add to favourite"
+                        data-add-to-fav
+                      >
+                        <ion-icon
+                          name="star-outline"
+                          aria-hidden="true"
+                          class="icon-outline"
+                        ></ion-icon>
+                        <ion-icon
+                          name="star"
+                          aria-hidden="true"
+                          class="icon-fill"
+                        ></ion-icon>
+                      </button>
+                    </td>
+
+                    <th class="table-data rank" scope="row">7</th>
+
+                    <td class="table-data">
+                      <div class="wrapper">
+                        <img
+                          src="./assets/images/coin-7.svg"
+                          width="20"
+                          height="20"
+                          alt="Cardano logo"
+                          class="img"
+                        />
+
+                        <h3>
+                          <a href="#" class="coin-name"
+                            >Cardano <span class="span">ADA</span></a
+                          >
+                        </h3>
+                      </div>
+                    </td>
+
+                    <td class="table-data last-price">$56,623.54</td>
+
+                    <td class="table-data last-update green">+0.8%</td>
+
+                    <td class="table-data market-cap">$880,423,640,582</td>
+
+                    <td class="table-data">
+                      <img
+                        src="./assets/images/chart-1.svg"
+                        width="100"
+                        height="40"
+                        alt="profit chart"
+                        class="chart"
+                      />
+                    </td>
+
+                    <td class="table-data">
+                      <button class="btn btn-outline">Trade</button>
+                    </td>
+                  </tr>
+
+                  <tr class="table-row">
+                    <td class="table-data">
+                      <button
+                        class="add-to-fav"
+                        aria-label="Add to favourite"
+                        data-add-to-fav
+                      >
+                        <ion-icon
+                          name="star-outline"
+                          aria-hidden="true"
+                          class="icon-outline"
+                        ></ion-icon>
+                        <ion-icon
+                          name="star"
+                          aria-hidden="true"
+                          class="icon-fill"
+                        ></ion-icon>
+                      </button>
+                    </td>
+
+                    <th class="table-data rank" scope="row">8</th>
+
+                    <td class="table-data">
+                      <div class="wrapper">
+                        <img
+                          src="./assets/images/coin-8.svg"
+                          width="20"
+                          height="20"
+                          alt="Avalanche logo"
+                          class="img"
+                        />
+
+                        <h3>
+                          <a href="#" class="coin-name"
+                            >Avalanche <span class="span">AVAX</span></a
+                          >
+                        </h3>
+                      </div>
+                    </td>
+
+                    <td class="table-data last-price">$56,623.54</td>
+
+                    <td class="table-data last-update green">+1.41%</td>
+
+                    <td class="table-data market-cap">$880,423,640,582</td>
+
+                    <td class="table-data">
+                      <img
+                        src="./assets/images/chart-1.svg"
+                        width="100"
+                        height="40"
+                        alt="profit chart"
+                        class="chart"
+                      />
+                    </td>
+
+                    <td class="table-data">
+                      <button class="btn btn-outline">Trade</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
+        </section>
 
-          <div class="market-tab">
-
-            <ul class="tab-nav">
-
-              <li>
-                <button class="tab-btn active">View All</button>
-              </li>
-
-              <li>
-                <button class="tab-btn">Metaverse</button>
-              </li>
-
-              <li>
-                <button class="tab-btn">Entertainment</button>
-              </li>
-
-              <li>
-                <button class="tab-btn">Energy</button>
-              </li>
-
-              <li>
-                <button class="tab-btn">NFT</button>
-              </li>
-
-              <li>
-                <button class="tab-btn">Gaming</button>
-              </li>
-
-              <li>
-                <button class="tab-btn">Music</button>
-              </li>
-
-            </ul>
-
-            <table class="market-table">
-
-              <thead class="table-head">
-
-                <tr class="table-row table-title">
-
-                  <th class="table-heading"></th>
-
-                  <th class="table-heading" scope="col">#</th>
-
-                  <th class="table-heading" scope="col">Name</th>
-
-                  <th class="table-heading" scope="col">Last Price</th>
-
-                  <th class="table-heading" scope="col">24h %</th>
-
-                  <th class="table-heading" scope="col">Market Cap</th>
-
-                  <th class="table-heading" scope="col">Last 7 Days</th>
-
-                  <th class="table-heading"></th>
-
-                </tr>
-
-              </thead>
-
-              <tbody class="table-body">
-
-                <tr class="table-row">
-
-                  <td class="table-data">
-                    <button class="add-to-fav" aria-label="Add to favourite" data-add-to-fav>
-                      <ion-icon name="star-outline" aria-hidden="true" class="icon-outline"></ion-icon>
-                      <ion-icon name="star" aria-hidden="true" class="icon-fill"></ion-icon>
-                    </button>
-                  </td>
-
-                  <th class="table-data rank" scope="row">1</th>
-
-                  <td class="table-data">
-                    <div class="wrapper">
-                      <img src="./assets/images/coin-1.svg" width="20" height="20" alt="Bitcoin logo" class="img">
-
-                      <h3>
-                        <a href="#" class="coin-name">Bitcoin <span class="span">BTC</span></a>
-                      </h3>
-                    </div>
-                  </td>
-
-                  <td class="table-data last-price">$56,623.54</td>
-
-                  <td class="table-data last-update green">+1.45%</td>
-
-                  <td class="table-data market-cap">$880,423,640,582</td>
-
-                  <td class="table-data">
-                    <img src="./assets/images/chart-1.svg" width="100" height="40" alt="profit chart" class="chart">
-                  </td>
-
-                  <td class="table-data">
-                    <button class="btn btn-outline">Trade</button>
-                  </td>
-
-                </tr>
-
-                <tr class="table-row">
-
-                  <td class="table-data">
-                    <button class="add-to-fav" aria-label="Add to favourite" data-add-to-fav>
-                      <ion-icon name="star-outline" aria-hidden="true" class="icon-outline"></ion-icon>
-                      <ion-icon name="star" aria-hidden="true" class="icon-fill"></ion-icon>
-                    </button>
-                  </td>
-
-                  <th class="table-data rank" scope="row">2</th>
-
-                  <td class="table-data">
-                    <div class="wrapper">
-                      <img src="./assets/images/coin-2.svg" width="20" height="20" alt="Ethereum logo" class="img">
-
-                      <h3>
-                        <a href="#" class="coin-name">Ethereum <span class="span">ETH</span></a>
-                      </h3>
-                    </div>
-                  </td>
-
-                  <td class="table-data last-price">$56,623.54</td>
-
-                  <td class="table-data last-update red">-5.12%</td>
-
-                  <td class="table-data market-cap">$880,423,640,582</td>
-
-                  <td class="table-data">
-                    <img src="./assets/images/chart-2.svg" width="100" height="40" alt="loss chart" class="chart">
-                  </td>
-
-                  <td class="table-data">
-                    <button class="btn btn-outline">Trade</button>
-                  </td>
-
-                </tr>
-
-                <tr class="table-row">
-
-                  <td class="table-data">
-                    <button class="add-to-fav" aria-label="Add to favourite" data-add-to-fav>
-                      <ion-icon name="star-outline" aria-hidden="true" class="icon-outline"></ion-icon>
-                      <ion-icon name="star" aria-hidden="true" class="icon-fill"></ion-icon>
-                    </button>
-                  </td>
-
-                  <th class="table-data rank" scope="row">3</th>
-
-                  <td class="table-data">
-                    <div class="wrapper">
-                      <img src="./assets/images/coin-3.svg" width="20" height="20" alt="Tether logo" class="img">
-
-                      <h3>
-                        <a href="#" class="coin-name">Tether <span class="span">USDT/USD</span></a>
-                      </h3>
-                    </div>
-                  </td>
-
-                  <td class="table-data last-price">$56,623.54</td>
-
-                  <td class="table-data last-update green">+1.45%</td>
-
-                  <td class="table-data market-cap">$880,423,640,582</td>
-
-                  <td class="table-data">
-                    <img src="./assets/images/chart-1.svg" width="100" height="40" alt="profit chart" class="chart">
-                  </td>
-
-                  <td class="table-data">
-                    <button class="btn btn-outline">Trade</button>
-                  </td>
-
-                </tr>
-
-                <tr class="table-row">
-
-                  <td class="table-data">
-                    <button class="add-to-fav" aria-label="Add to favourite" data-add-to-fav>
-                      <ion-icon name="star-outline" aria-hidden="true" class="icon-outline"></ion-icon>
-                      <ion-icon name="star" aria-hidden="true" class="icon-fill"></ion-icon>
-                    </button>
-                  </td>
-
-                  <th class="table-data rank" scope="row">4</th>
-
-                  <td class="table-data">
-                    <div class="wrapper">
-                      <img src="./assets/images/coin-4.svg" width="20" height="20" alt="BNB logo" class="img">
-
-                      <h3>
-                        <a href="#" class="coin-name">BNB <span class="span">BNB/USD</span></a>
-                      </h3>
-                    </div>
-                  </td>
-
-                  <td class="table-data last-price">$56,623.54</td>
-
-                  <td class="table-data last-update red">-3.75%%</td>
-
-                  <td class="table-data market-cap">$880,423,640,582</td>
-
-                  <td class="table-data">
-                    <img src="./assets/images/chart-2.svg" width="100" height="40" alt="loss chart" class="chart">
-                  </td>
-
-                  <td class="table-data">
-                    <button class="btn btn-outline">Trade</button>
-                  </td>
-
-                </tr>
-
-                <tr class="table-row">
-
-                  <td class="table-data">
-                    <button class="add-to-fav" aria-label="Add to favourite" data-add-to-fav>
-                      <ion-icon name="star-outline" aria-hidden="true" class="icon-outline"></ion-icon>
-                      <ion-icon name="star" aria-hidden="true" class="icon-fill"></ion-icon>
-                    </button>
-                  </td>
-
-                  <th class="table-data rank" scope="row">5</th>
-
-                  <td class="table-data">
-                    <div class="wrapper">
-                      <img src="./assets/images/coin-5.svg" width="20" height="20" alt="Solana logo" class="img">
-
-                      <h3>
-                        <a href="#" class="coin-name">Solana <span class="span">SOL</span></a>
-                      </h3>
-                    </div>
-                  </td>
-
-                  <td class="table-data last-price">$56,623.54</td>
-
-                  <td class="table-data last-update green">+1.45%</td>
-
-                  <td class="table-data market-cap">$880,423,640,582</td>
-
-                  <td class="table-data">
-                    <img src="./assets/images/chart-1.svg" width="100" height="40" alt="profit chart" class="chart">
-                  </td>
-
-                  <td class="table-data">
-                    <button class="btn btn-outline">Trade</button>
-                  </td>
-
-                </tr>
-
-                <tr class="table-row">
-
-                  <td class="table-data">
-                    <button class="add-to-fav" aria-label="Add to favourite" data-add-to-fav>
-                      <ion-icon name="star-outline" aria-hidden="true" class="icon-outline"></ion-icon>
-                      <ion-icon name="star" aria-hidden="true" class="icon-fill"></ion-icon>
-                    </button>
-                  </td>
-
-                  <th class="table-data rank" scope="row">6</th>
-
-                  <td class="table-data">
-                    <div class="wrapper">
-                      <img src="./assets/images/coin-6.svg" width="20" height="20" alt="XRP logo" class="img">
-
-                      <h3>
-                        <a href="#" class="coin-name">XRP <span class="span">XRP</span></a>
-                      </h3>
-                    </div>
-                  </td>
-
-                  <td class="table-data last-price">$56,623.54</td>
-
-                  <td class="table-data last-update red">-2.22%</td>
-
-                  <td class="table-data market-cap">$880,423,640,582</td>
-
-                  <td class="table-data">
-                    <img src="./assets/images/chart-2.svg" width="100" height="40" alt="loss chart" class="chart">
-                  </td>
-
-                  <td class="table-data">
-                    <button class="btn btn-outline">Trade</button>
-                  </td>
-
-                </tr>
-
-                <tr class="table-row">
-
-                  <td class="table-data">
-                    <button class="add-to-fav" aria-label="Add to favourite" data-add-to-fav>
-                      <ion-icon name="star-outline" aria-hidden="true" class="icon-outline"></ion-icon>
-                      <ion-icon name="star" aria-hidden="true" class="icon-fill"></ion-icon>
-                    </button>
-                  </td>
-
-                  <th class="table-data rank" scope="row">7</th>
-
-                  <td class="table-data">
-                    <div class="wrapper">
-                      <img src="./assets/images/coin-7.svg" width="20" height="20" alt="Cardano logo" class="img">
-
-                      <h3>
-                        <a href="#" class="coin-name">Cardano <span class="span">ADA</span></a>
-                      </h3>
-                    </div>
-                  </td>
-
-                  <td class="table-data last-price">$56,623.54</td>
-
-                  <td class="table-data last-update green">+0.8%</td>
-
-                  <td class="table-data market-cap">$880,423,640,582</td>
-
-                  <td class="table-data">
-                    <img src="./assets/images/chart-1.svg" width="100" height="40" alt="profit chart" class="chart">
-                  </td>
-
-                  <td class="table-data">
-                    <button class="btn btn-outline">Trade</button>
-                  </td>
-
-                </tr>
-
-                <tr class="table-row">
-
-                  <td class="table-data">
-                    <button class="add-to-fav" aria-label="Add to favourite" data-add-to-fav>
-                      <ion-icon name="star-outline" aria-hidden="true" class="icon-outline"></ion-icon>
-                      <ion-icon name="star" aria-hidden="true" class="icon-fill"></ion-icon>
-                    </button>
-                  </td>
-
-                  <th class="table-data rank" scope="row">8</th>
-
-                  <td class="table-data">
-                    <div class="wrapper">
-                      <img src="./assets/images/coin-8.svg" width="20" height="20" alt="Avalanche logo" class="img">
-
-                      <h3>
-                        <a href="#" class="coin-name">Avalanche <span class="span">AVAX</span></a>
-                      </h3>
-                    </div>
-                  </td>
-
-                  <td class="table-data last-price">$56,623.54</td>
-
-                  <td class="table-data last-update green">+1.41%</td>
-
-                  <td class="table-data market-cap">$880,423,640,582</td>
-
-                  <td class="table-data">
-                    <img src="./assets/images/chart-1.svg" width="100" height="40" alt="profit chart" class="chart">
-                  </td>
-
-                  <td class="table-data">
-                    <button class="btn btn-outline">Trade</button>
-                  </td>
-
-                </tr>
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-      </section>
-
-
-
-
-
-      <!-- 
+        <!-- 
         - #INSTRUCTION
       -->
 
-      <section class="section instruction" aria-label="instruction" data-section>
-        <div class="container">
+        <section
+          id="how-it-works"
+          class="section instruction"
+          aria-label="instruction"
+          data-section
+        >
+          <div class="container">
+            <h2 class="h2 section-title">How It Works</h2>
 
-          <h2 class="h2 section-title">How It Work</h2>
+            <p class="section-text">
+              Follow these four simple steps to start buying, selling, and
+              swapping digital assets on your go-to crypto trading hub.
+            </p>
 
-          <p class="section-text">
-            Stacks is a production-ready library of stackable content blocks built in React Native.
-          </p>
+            <ul class="instruction-list">
+              <li>
+                <div class="instruction-card">
+                  <figure class="card-banner">
+                    <img
+                      src="./assets/images/instruction-1.png"
+                      width="96"
+                      height="96"
+                      loading="lazy"
+                      alt="Step 1: Visit Website"
+                      class="img"
+                    />
+                  </figure>
 
-          <ul class="instruction-list">
+                  <p class="card-subtitle">Step 1</p>
+                  <h3 class="h3 card-title">Spot the BTC Coin</h3>
+                  <p class="card-text">
+                    You’re in our trading hub—seeing this Bitcoin (BTC) coin
+                    image means you’ve arrived. Next up, connect your wallet to
+                    proceed.
+                  </p>
+                </div>
+              </li>
 
-            <li>
-              <div class="instruction-card">
+              <li>
+                <div class="instruction-card">
+                  <figure class="card-banner">
+                    <img
+                      src="./assets/images/instruction-2.png"
+                      width="96"
+                      height="96"
+                      loading="lazy"
+                      alt="Step 2: Connect Wallet"
+                      class="img"
+                    />
+                  </figure>
 
-                <figure class="card-banner">
-                  <img src="./assets/images/instruction-1.png" width="96" height="96" loading="lazy" alt="Step 1"
-                    class="img">
-                </figure>
+                  <p class="card-subtitle">Step 2</p>
 
-                <p class="card-subtitle">Step 1</p>
+                  <h3 class="h3 card-title">Connect Wallet</h3>
 
-                <h3 class="h3 card-title">Download</h3>
+                  <p class="card-text">
+                    Link your Ethereum-compatible wallet (MetaMask,
+                    WalletConnect, etc.) so you can fund trades and receive
+                    assets directly.
+                  </p>
+                </div>
+              </li>
 
-                <p class="card-text">
-                  Download Cryptright from the Google Play Store for Android devices or the Apple App Store for iOS devices.
-                </p>
+              <li>
+                <div class="instruction-card">
+                  <figure class="card-banner">
+                    <img
+                      src="./assets/images/instruction-3.png"
+                      width="96"
+                      height="96"
+                      loading="lazy"
+                      alt="Step 3: Browse & Trade"
+                      class="img"
+                    />
+                  </figure>
 
-              </div>
-            </li>
+                  <p class="card-subtitle">Step 3</p>
 
-            <li>
-              <div class="instruction-card">
+                  <h3 class="h3 card-title">Buy • Sell • Swap</h3>
 
-                <figure class="card-banner">
-                  <img src="./assets/images/instruction-2.png" width="96" height="96" loading="lazy" alt="Step 2"
-                    class="img">
-                </figure>
+                  <p class="card-text">
+                    Hunt for your favorite cryptocurrencies. Choose to buy,
+                    sell, or swap in just a few clicks.
+                  </p>
+                </div>
+              </li>
 
-                <p class="card-subtitle">Step 2</p>
+              <li>
+                <div class="instruction-card">
+                  <figure class="card-banner">
+                    <img
+                      src="./assets/images/instruction-4.png"
+                      width="96"
+                      height="96"
+                      loading="lazy"
+                      alt="Step 4: Funds Credited"
+                      class="img"
+                    />
+                  </figure>
 
-                <h3 class="h3 card-title">Connect Wallet</h3>
+                  <p class="card-subtitle">Step 4</p>
 
-                <p class="card-text">
-                  Link your UPI-enabled bank account to your exchange account. Once linked, you can deposit into your exchange wallet.
-                </p>
+                  <h3 class="h3 card-title">Funds Credited</h3>
 
-              </div>
-            </li>
+                  <p class="card-text">
+                    Once your trade executes, the crypto lands back in your
+                    wallet—ready to hold, send, or spend.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
 
-            <li>
-              <div class="instruction-card">
-
-                <figure class="card-banner">
-                  <img src="./assets/images/instruction-3.png" width="96" height="96" loading="lazy" alt="Step 3"
-                    class="img">
-                </figure>
-
-                <p class="card-subtitle">Step 3</p>
-
-                <h3 class="h3 card-title">Start Trading</h3>
-
-                <p class="card-text">
-                  Explore a diverse range of cryptocurrencies and start trading with ease.
-                </p>
-
-              </div>
-            </li>
-
-            <li>
-              <div class="instruction-card">
-
-                <figure class="card-banner">
-                  <img src="./assets/images/instruction-4.png" width="96" height="96" loading="lazy" alt="Step 4"
-                    class="img">
-                </figure>
-
-                <p class="card-subtitle">Step 4</p>
-
-                <h3 class="h3 card-title">Earn Money</h3>
-
-                <p class="card-text">
-                  Now you are all set to earn money through strategic investments and timely trades.
-                </p>
-
-              </div>
-            </li>
-
-          </ul>
-
-        </div>
-      </section>
-
-
-
-
-
-      <!-- 
+        <!-- 
         - #ABOUT
       -->
 
-      <section class="section about" aria-label="about" data-section>
-        <div class="container">
+        <section class="section about" aria-label="about" data-section>
+          <div class="container">
+            <figure class="about-banner">
+              <img
+                src="./assets/images/about-banner.png"
+                width="748"
+                height="436"
+                loading="lazy"
+                alt="about banner"
+                class="w-100"
+              />
+            </figure>
 
-          <figure class="about-banner">
-            <img src="./assets/images/about-banner.png" width="748" height="436" loading="lazy" alt="about banner"
-              class="w-100">
-          </figure>
+            <div class="about-content">
+              <h2 class="h2 section-title">Why JudeX?</h2>
 
-          <div class="about-content">
+              <p class="section-text">
+                JudeX is a simple and secure platform for buying and selling
+                digital assets. Instantly send crypto to your connected wallet,
+                with support for multiple wallets — all in a few clicks.
+              </p>
 
-            <h2 class="h2 section-title">Why Cryptright?</h2>
+              <ul class="section-list">
+                <li class="section-item">
+                  <div class="title-wrapper">
+                    <ion-icon
+                      name="checkmark-circle"
+                      aria-hidden="true"
+                    ></ion-icon>
+                    <h3 class="h3 list-title">Easy to Use</h3>
+                  </div>
+                  <p class="item-text">
+                    A beginner-friendly interface makes it easy for anyone to
+                    buy and sell crypto quickly, with minimal steps.
+                  </p>
+                </li>
 
-            <p class="section-text">
-              Crytright is most trusted platform
-            </p>
+                <li class="section-item">
+                  <div class="title-wrapper">
+                    <ion-icon
+                      name="checkmark-circle"
+                      aria-hidden="true"
+                    ></ion-icon>
+                    <h3 class="h3 list-title">Connect Multiple Wallets</h3>
+                  </div>
+                  <p class="item-text">
+                    JudeX supports multi-wallet connections so users can choose
+                    where to send or receive their digital assets effortlessly.
+                  </p>
+                </li>
 
-            <ul class="section-list">
+                <li class="section-item">
+                  <div class="title-wrapper">
+                    <ion-icon
+                      name="checkmark-circle"
+                      aria-hidden="true"
+                    ></ion-icon>
+                    <h3 class="h3 list-title">Instant Crypto Delivery</h3>
+                  </div>
+                  <p class="item-text">
+                    All purchases are processed instantly, with crypto sent
+                    directly to your wallet address — no delays.
+                  </p>
+                </li>
+              </ul>
 
-              <li class="section-item">
-                <div class="title-wrapper">
-                  <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
-
-                  <h3 class="h3 list-title">Safe and Secure</h3>
-                </div>
-
-                <p class="item-text">
-                  Enterprise-grade multi-factor security for digital assets. All withdrawals are processed with manual review.
-                </p>
-              </li>
-
-              <li class="section-item">
-                <div class="title-wrapper">
-                  <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
-
-                  <h3 class="h3 list-title">Best Liquidity</h3>
-                </div>
-
-                <p class="item-text">
-                  Our Options book have tightest spread in the industry. For BTC & ETH it is less than 2 BPS. We provide up to 100x leverage and all contracts are settled in USDT, BTC or ETH.
-                </p>
-              </li>
-
-              <li class="section-item">
-                <div class="title-wrapper">
-                  <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
-
-                  <h3 class="h3 list-title">24x7 Support</h3>
-                </div>
-
-                <p class="item-text">
-                  90% support queries are resolved in less than 24 hours
-                </p>
-              </li>
-
-            </ul>
-
-            <a href="#" class="btn btn-primary">Explore</a>
-
+              <a href="mailto:chuksy3@gmail.com" class="btn btn-primary"
+                >Contact Us</a
+              >
+            </div>
           </div>
+        </section>
 
-        </div>
-      </section>
-
-
-
-
-
-      <!-- 
+        <!-- 
         - #APP
       -->
 
       <section class="section app" aria-label="app" data-section>
         <div class="container">
-
           <div class="app-content">
-
-            <h2 class="h2 section-title">Free Your Money & Invest With Confidence</h2>
-
+            <h2 class="h2 section-title">
+              Trade Anywhere, Anytime with JudeX
+            </h2>
+      
             <p class="section-text">
-              Crypright is the best place to trade futures and options on BTC, ETH.
+              JudeX lets you trade BTC and ETH options and futures with speed and confidence — right from your browser, on any device.
             </p>
-
+      
             <ul class="section-list">
-
               <li class="section-item">
                 <div class="title-wrapper">
                   <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
-
-                  <h3 class="h3 item-title">Buy, Sell, And Trade On The Go</h3>
+                  <h3 class="h3 item-title">App-Like Experience</h3>
                 </div>
-
                 <p class="item-text">
-                  Buy crypto directly using UPI/NEFT/IMPS/Cards and start trading
+                  Install JudeX to your home screen for a smooth, native feel with zero downloads.
                 </p>
               </li>
-
+      
               <li class="section-item">
                 <div class="title-wrapper">
                   <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
-
-                  <h3 class="h3 item-title">Take Control Of Your Wealth</h3>
+                  <h3 class="h3 item-title">Trade Seamlessly</h3>
                 </div>
-
                 <p class="item-text">
-                  Convert crypto to fiat hassle-free and get funds to your bank account
+                  Buy, sell, and convert crypto instantly with integrated payment options.
                 </p>
               </li>
-
+      
+              <li class="section-item">
+                <div class="title-wrapper">
+                  <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
+                  <h3 class="h3 item-title">Available on All Devices</h3>
+                </div>
+                <p class="item-text">
+                  Desktop or mobile — JudeX is always just a tap away.
+                </p>
+              </li>
             </ul>
-
+      
             <div class="app-wrapper">
-              <a href="#">
-                <img src="./assets/images/googleplay.png" width="135" height="40" loading="lazy"
-                  alt="get it on google play">
-              </a>
-
-              <a href="#">
-                <img src="./assets/images/appstore.png" width="120" height="40" loading="lazy"
-                  alt="download on the app store">
-              </a>
+              <!-- No store buttons -->
             </div>
-
           </div>
-
+      
           <div class="app-banner">
-            <img src="./assets/images/app-banner.png" width="618" height="526" loading="lazy" alt="app banner"
-              class="w-100">
-
-            <span class="span">Scan To Download</span>
+            <img
+              src="./assets/images/app-banner.png"
+              width="618"
+              height="526"
+              loading="lazy"
+              alt="JudeX app preview"
+              class="w-100"
+            />
+            <span class="span">Install JudeX from browser</span>
           </div>
-
         </div>
       </section>
+      
+      </article>
+    </main>
 
-    </article>
-  </main>
-
-
-
-
-
-  <!-- 
+    <!-- 
     - #FOOTER
   -->
 
-  <footer class="footer">
+    <footer class="footer">
+      <div class="footer-top" data-section>
+        <div class="container">
+          <div class="footer-brand">
+            <a href="#" class="logo">
+              <img
+                src="./assets/images/logo.svg"
+                width="50"
+                height="50"
+                alt="JudeX logo"
+              />
+              JudeX
+            </a>
 
-    <div class="footer-top" data-section>
-      <div class="container">
+            <h2 class="footer-title"></h2>
 
-        <div class="footer-brand">
+            <a href="tel:+123456789101" class="footer-contact-link"
+              >+234 813 530 0009</a
+            >
 
-          <a href="#" class="logo">
-            <img src="./assets/images/logo.svg" width="50" height="50" alt="Cryptex logo">
-            Crypright
-          </a>
+            <a href="mailto:hello.cryptex@gmail.com" class="footer-contact-link"
+              >hello@judex.com</a
+            >
 
-          <h2 class="footer-title">Contact Here!</h2>
+            <address class="footer-contact-link">
+              Block 23, Adekoya Estate, Ikeja 110018
+            </address>
+          </div>
 
-          <a href="tel:+123456789101" class="footer-contact-link">+91 11 12345678</a>
+          <ul class="footer-list">
+            <li>
+              <p class="footer-list-title">Products</p>
+            </li>
 
-          <a href="mailto:hello.cryptex@gmail.com" class="footer-contact-link">hello.cryptright@gmail.com</a>
+            <li>
+              <a href="#" class="footer-link">Spot</a>
+            </li>
 
-          <address class="footer-contact-link">
-            Block k, Chittaranjan Park, New Delhi, Delhi 110018
-          </address>
+            <li>
+              <a href="#" class="footer-link">Exchange</a>
+            </li>
 
+            <li>
+              <a href="#" class="footer-link">Launchpad</a>
+            </li>
+
+          </ul>
+
+          <ul class="footer-list">
+            <li>
+              <p class="footer-list-title">Services</p>
+            </li>
+
+            <li>
+              <a href="#buyCryptoLink" class="footer-link">Buy Crypto</a>
+            </li>
+
+            <li>
+              <a href="#sellCryptoLink" class="footer-link">Sell Crypto</a>
+            </li>
+
+            <li>
+              <a href="#market-update" class="footer-link">Markets</a>
+            </li>
+
+          </ul>
+
+          <ul class="footer-list">
+            <li>
+              <p class="footer-list-title">Support</p>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Help Center</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Referral Program</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Trading Rules</a>
+            </li>
+          </ul>
+
+          <ul class="footer-list">
+            <li>
+              <p class="footer-list-title">About Us</p>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Careers</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Partnerships</a>
+            </li>
+
+            <li>
+              <a href="#swapCryptoLink" class="footer-link">Swap</a>
+            </li>
+          </ul>
         </div>
-
-        <ul class="footer-list">
-
-          <li>
-            <p class="footer-list-title">Products</p>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Spot</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Inverse Perpetual</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">USDT Perpetual</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Exchange</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Launchpad</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Binance Pay</a>
-          </li>
-
-        </ul>
-
-        <ul class="footer-list">
-
-          <li>
-            <p class="footer-list-title">Services</p>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Buy Crypto</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Markets</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Tranding Fee</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Affiliate Program</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Referral Program</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">API</a>
-          </li>
-
-        </ul>
-
-        <ul class="footer-list">
-
-          <li>
-            <p class="footer-list-title">Support</p>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Bybit Learn</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Help Center</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">User Feedback</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Submit a request</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">API Documentation</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Trading Rules</a>
-          </li>
-
-        </ul>
-
-        <ul class="footer-list">
-
-          <li>
-            <p class="footer-list-title">About Us</p>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">About Bybit</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Authenticity Check</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Careers</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Business Contacts</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Blog</a>
-          </li>
-
-        </ul>
-
       </div>
-    </div>
 
-    <div class="footer-bottom">
-      <div class="container">
+      <div class="footer-bottom">
+        <div class="container">
+          <p class="copyright">&copy; 2025, JudeX Technologies. All Rights Reserved.</p>
 
-        <p class="copyright">
-          &copy; 2023 Cryptright All Rights are Reserved
-        </p>
+          <ul class="social-list">
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+            </li>
 
-        <ul class="social-list">
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-twitter"></ion-icon>
+              </a>
+            </li>
 
-          <li>
-            <a href="#" class="social-link">
-              <ion-icon name="logo-facebook"></ion-icon>
-            </a>
-          </li>
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-instagram"></ion-icon>
+              </a>
+            </li>
 
-          <li>
-            <a href="#" class="social-link">
-              <ion-icon name="logo-twitter"></ion-icon>
-            </a>
-          </li>
-
-          <li>
-            <a href="#" class="social-link">
-              <ion-icon name="logo-instagram"></ion-icon>
-            </a>
-          </li>
-
-          <li>
-            <a href="#" class="social-link">
-              <ion-icon name="logo-linkedin"></ion-icon>
-            </a>
-          </li>
-
-        </ul>
-
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-linkedin"></ion-icon>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-
-  </footer>
-
-
-
-
-
-  <!-- 
+    </footer>
+    <!-- 
     - custom js link
   -->
-  <script src="./assets/js/script.js" defer></script>
+    <script src="./assets/js/script.js" defer></script>
 
-  <!-- 
+    <!-- 
+    - wallet js link
+  -->
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.86.2/lib/index.iife.min.js"></script>
+    <script type="module" src="./assets/js/wallet.js" defer></script>
+
+    <!-- 
+    - util js link
+  -->
+    <script type="module" src="./assets/js/util.js" defer></script>
+
+    <!-- 
+    - buyCrypto js link
+  -->
+    <script type="module" src="./assets/js/buyCrypto.js" defer></script>
+
+    <!-- 
+    - sellCrypto js link
+  -->
+    <script type="module" src="./assets/js/sellCrypto.js" defer></script>
+
+    <!-- 
+    - swapCrypto js link
+  -->
+    <script type="module" src="./assets/js/swapCrypto.js" defer></script>
+
+    <!-- 
     - ionicon link
   -->
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+    <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
+    <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+    <script>
+      function showToast(message, type = "info", onClick = null) {
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `<span class="toast-message">${message}</span>`;
 
-</body>
+        if (onClick) {
+          toast.style.cursor = "pointer";
+          toast.addEventListener("click", () => {
+            onClick();
+            toast.remove();
+          });
+        } else {
+          setTimeout(() => toast.classList.add("fade-out"), 4000);
+          setTimeout(() => toast.remove(), 4300);
+        }
 
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add("show"), 50);
+      }
+
+      let newWorker;
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./service-worker.js")
+            .then((reg) => {
+              console.log("Service Worker registered:", reg);
+
+              // Listen for updates
+              reg.addEventListener("updatefound", () => {
+                newWorker = reg.installing;
+
+                newWorker.addEventListener("statechange", () => {
+                  if (
+                    newWorker.state === "installed" &&
+                    navigator.serviceWorker.controller
+                  ) {
+                    showToast(
+                      "New version available. Click to update ⬇️",
+                      "install",
+                      () => {
+                        newWorker.postMessage({ type: "SKIP_WAITING" });
+                      }
+                    );
+                  }
+                });
+              });
+            });
+
+          // Reload the page when the new service worker takes control
+          navigator.serviceWorker.addEventListener("controllerchange", () => {
+            window.location.reload();
+          });
+        });
+      }
+
+      // Install prompt toast
+      let deferredPrompt;
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        showToast("Click here to install the app! ⬇️", "install", async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const result = await deferredPrompt.userChoice;
+            console.log("User choice:", result.outcome);
+            deferredPrompt = null;
+          }
+        });
+      });
+
+      // ------------- Buy --------------------------------------
+      const cryptoSelect = document.getElementById("cryptoSelect");
+      const fiatAmountInput = document.getElementById("fiatAmount");
+      const buyButton = document.getElementById("buyButton");
+      const fiatCurrencySelect = document.getElementById("fiatCurrency");
+
+      // ----------- Sell ----------------------------------------
+      const sellCryptoSelect = document.getElementById("sellCryptoSelect");
+      const cryptoAmountIn = document.getElementById("cryptoAmount");
+      const sellButton = document.getElementById("sellButton");
+      const sellFiatSelect = document.getElementById("sellFiatCurrency");
+
+      function launchTransak(mode) {
+        // ------- Buy Value -----------------------------
+        const selectedCrypto = cryptoSelect.value.toUpperCase();
+        const fiatAmount = parseFloat(fiatAmountInput.value).toFixed(2);
+        const fiatCurrency = fiatCurrencySelect.value;
+        // ------- Sell Value-----------------------------
+        const sellCrypto = sellCryptoSelect.value.toUpperCase();
+        const cryptoAmount = parseFloat(cryptoAmountIn.value);
+        const sellFiatCurrency = sellFiatSelect.value;
+
+        const walletAddress = window.walletData?.address;
+
+        if (!walletAddress) {
+          if (mode === "BUY") {
+            buyButton.disabled = true;
+            buyButton.style.opacity = 0.5;
+            buyButton.style.cursor = "not-allowed";
+            return showToast("Please connect your wallet first.", "warning");
+          }
+          sellButton.disabled = true;
+          sellButton.style.opacity = 0.5;
+          sellButton.style.cursor = "not-allowed";
+          return showToast("Please connect your wallet first.", "warning");
+        }
+
+        const opts = {
+          apiKey: "6b1d40eb-87e6-4d97-8c6a-d27afaa19f53",
+          environment: "STAGING", // or 'PRODUCTION'
+          defaultCryptoCurrency: mode === "BUY" ? selectedCrypto : sellCrypto,
+          walletAddress,
+          productsAvailed: mode,
+          hostURL: window.location.href,
+          themeColor: "000000",
+          exchangeScreenTitle:
+            mode === "BUY" ? "Buy Crypto with JudeX" : "Sell Crypto with JudeX",
+          hideMenu: true,
+          widgetWidth: "450px",
+          widgetHeight: "650px",
+          redirectURL: "",
+        };
+
+        if (mode === "BUY") {
+          if (isNaN(fiatAmount) || fiatAmount <= 0)
+            return showToast("Enter a valid fiat amount.", "warning");
+          opts.fiatAmount = fiatAmount;
+          opts.fiatCurrency = fiatCurrency;
+        } else {
+          if (isNaN(cryptoAmount) || cryptoAmount <= 0)
+            return showToast("Enter a valid crypto amount.", "warning");
+          opts.defaultCryptoAmount = cryptoAmount;
+          opts.fiatCurrency = sellFiatCurrency;
+        }
+
+        const transak = new TransakSDK.default(opts);
+        transak.init();
+
+        // This will trigger when the user closed the widget
+        transak.on(transak.EVENTS.TRANSAK_WIDGET_CLOSE, (orderData) => {
+          transak.close();
+        });
+
+        // This will trigger when the user marks payment is made
+        transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
+          showToast(
+            mode === "BUY"
+              ? "Your crypto purchase was successful! 🎉"
+              : "Your crypto sale was successful! 🎉",
+            "success"
+          );
+          transak.close();
+        });
+      }
+    </script>
+  </body>
 </html>

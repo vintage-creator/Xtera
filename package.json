@@ -1,0 +1,25 @@
+{
+  "name": "judex",
+  "version": "1.0.0",
+  "description": "A cryptocurrency platform where you can buy, sell, and swap digital assets.",
+  "main": "index.js",
+  "scripts": {
+    "client": "live-server",
+    "start": "node server & yarn client"
+  },
+  "author": "Israel C. Abazie <chuksy3@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.98.1",
+    "axios": "^1.8.4",
+    "concurrently": "^9.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "ethers": "^6.13.5",
+    "express": "^5.1.0",
+    "web3modal": "^1.9.12"
+  }
+}

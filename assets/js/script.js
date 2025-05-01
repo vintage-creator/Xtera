@@ -1,6 +1,55 @@
 'use strict';
 
 
+// Fetch and Update Ticker Content
+const tickerEl = document.getElementById('ticker');
+
+if (!tickerEl) {
+  console.error('Ticker element not found!');
+}
+
+// Fetch prices and display them
+async function fetchPrices() {
+  try {
+    // Fetch data from the backend API
+    const response = await fetch('http://localhost:3000/api/tickers');
+    const data = await response.json();
+
+    // Check if data.tickers exists
+    if (data && data.tickers) {
+      // Get the top 15 tickers (or all tickers if you prefer)
+      const tickers = data.tickers.slice(0, 15);
+
+      // Format the prices into a readable format
+      const formattedPrices = tickers.map(ticker => {
+        const price = parseFloat(ticker.last).toLocaleString('en-US', {
+          style: 'currency',
+          currency: 'USD' 
+        });
+        return `${ticker.pair}: ${price}`;
+      });
+
+      // Join the formatted prices with a separator and update the ticker element
+      tickerEl.innerHTML =formattedPrices.join('&nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp;');
+
+    } else {
+      throw new Error('Invalid data format from API');
+    }
+  } catch (error) {
+    tickerEl.innerHTML = 'Failed to load prices...';
+    // console.error('Error fetching prices:', error);
+  }
+}
+
+// Call fetchPrices immediately
+fetchPrices();
+
+// Optionally, refresh the prices every 60 seconds
+setInterval(fetchPrices, 60000);
+
+
+
+
 
 /**
  * add event on element

@@ -1,0 +1,37 @@
+{
+  "name": "JudeX",
+  "short_name": "JudeX",
+  "description": "Buy & Sell Digital Assets on JudeX",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "scope": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#2f324180",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/images/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://res.cloudinary.com/dcoxo8snb/image/upload/screenshot-mobile_t3uvqu.png",
+      "sizes": "360x640",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "https://res.cloudinary.com/dcoxo8snb/image/upload/screenshot-desktop_fdgoya.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}
