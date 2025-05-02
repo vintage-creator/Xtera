@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/api/quote?${params.toString()}`
+        `https://judex.onrender.com/api/quote?${params.toString()}`
       );
 
       if (!res.ok) {

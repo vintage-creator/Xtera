@@ -12,7 +12,7 @@ if (!tickerEl) {
 async function fetchPrices() {
   try {
     // Fetch data from the backend API
-    const response = await fetch('http://localhost:3000/api/tickers');
+    const response = await fetch('https://judex.onrender.com/api/tickers');
     const data = await response.json();
 
     // Check if data.tickers exists
