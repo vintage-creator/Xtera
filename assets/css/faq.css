@@ -1,0 +1,222 @@
+/* faq.css */
+
+:root {
+    /**
+     * colors
+     */
+  
+    --cadet-blue-crayola: hsl(227, 13%, 73%);
+    --maximum-yellow-red: hsl(41, 95%, 61%);
+    --medium-sea-green: hsl(142, 43%, 54%);
+    --blue-crayola_10: hsla(222, 100%, 61%, 0.05);
+    --smocky-black_30: hsla(0, 0%, 6%, 0.3);
+    --eerie-black-1: hsl(240, 5%, 8%);
+    --eerie-black-2: hsl(228, 9%, 10%);
+    --raisin-black: hsl(225, 15%, 16%);
+    --blue-crayola: hsl(222, 100%, 61%);
+    --roman-silver: hsl(223, 10%, 52%);
+    --presian-red: hsl(0, 64%, 52%);
+    --gunmetal_50: hsla(230, 16%, 22%, 0.502);
+    --gainsboro: hsl(0, 0%, 85%);
+    --cultured: hsl(0, 0%, 93%);
+    --white_50: hsla(0, 0%, 100%, 0.5);
+    --white_30: hsla(0, 0%, 100%, 0.3);
+    --white_10: hsla(0, 0%, 100%, 0.1);
+    --black_10: hsla(0, 0%, 0%, 0.1);
+    --white: hsl(0, 0%, 100%);
+}
+   
+/* ----------------------------------------- */
+/* 1. Container & Header Styling             */
+/* ----------------------------------------- */
+.faq-container {
+    max-width: 900px;
+    margin: 8rem auto;
+    padding: 3rem 1.5rem;
+  }
+  
+  .faq-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .faq-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--blue-crayola);
+    margin-bottom: 0.5rem;
+  }
+  
+  .faq-subtitle {
+    font-size: 1.6rem;
+    color: #fff;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+  
+  /* ----------------------------------------- */
+  /* 2. Responsive Grid Layout                 */
+  /* ----------------------------------------- */
+  .faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.8rem;
+    list-style: none;
+    padding: 0;
+    margin-top: 3rem;
+  }
+  
+  /* ----------------------------------------- */
+  /* 3. Card & Accordion Styling               */
+  /* ----------------------------------------- */
+  .faq-card details {
+    background: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .faq-card details:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+  
+  .faq-question {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-size: 1.6rem;
+    color: #555;
+    font-weight: 600;
+    user-select: none;
+    transition: background 0.3s ease;
+  }
+  
+  .faq-question:hover {
+    background: rgba(42,90,218,0.05);
+  }
+  
+  .faq-question ion-icon {
+    font-size: 2rem;
+    color: var(--blue-crayola);
+    transition: transform 0.3s ease;
+  }
+  
+  details[open] .faq-question ion-icon {
+    transform: rotate(90deg);
+  }
+  
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 1.5rem;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+  }
+  
+  details[open] .faq-answer {
+    padding: 0.75rem 1.5rem 1.5rem;
+    max-height: 1000px; 
+  }
+  
+  /* ----------------------------------------- */
+  /* 4. Answer Content Typography              */
+  /* ----------------------------------------- */
+  .faq-answer p,
+  .faq-answer ul {
+    margin: 0;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .faq-answer ul {
+    margin-top: 0.5rem;
+    padding-left: 1.25rem;
+  }
+  
+  .faq-answer li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .faq-answer a {
+    color: var(--blue-crayola);
+    text-decoration: none;
+    position: relative;
+  }
+  
+  .faq-answer a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0;
+    width: 100%; height: 2px;
+    background: var(--blue-crayola);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  
+  .faq-answer a:hover::after {
+    transform: scaleX(1);
+  }
+  
+  /* ----------------------------------------- */
+  /* 5. Entrance Animation                     */
+  /* ----------------------------------------- */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  
+  .faq-card {
+    animation: fadeInUp 0.5s both;
+  }
+  
+  /* stagger delays */
+  .faq-card:nth-child(1) { animation-delay: 0.1s; }
+  .faq-card:nth-child(2) { animation-delay: 0.2s; }
+  .faq-card:nth-child(3) { animation-delay: 0.3s; }
+  .faq-card:nth-child(4) { animation-delay: 0.4s; }
+  .faq-card:nth-child(5) { animation-delay: 0.5s; }
+  .faq-card:nth-child(6) { animation-delay: 0.6s; }
+  .faq-card:nth-child(7) { animation-delay: 0.7s; }
+  .faq-card:nth-child(8) { animation-delay: 0.8s; }
+  .faq-card:nth-child(9) { animation-delay: 0.9s; }
+  .faq-card:nth-child(10) { animation-delay: 1.0s; }
+
+  /* ----------------------------------------- */
+  /* 6. Responsive Tweaks                      */
+  /* ----------------------------------------- */
+  @media (max-width: 600px) {
+    .faq-container {
+      padding: 2rem 1rem;
+      max-width: 95%;
+    }
+    .faq-title {
+      font-size: 2rem;
+    }
+    .faq-grid {
+      grid-template-columns: 1fr;
+      gap: 1.3rem;
+    }
+    .faq-question {
+      align-items: flex-start;
+      font-size: 1.3rem;
+    }
+    .faq-question ion-icon {
+      font-size: 1.8rem;
+    }
+    .faq-answer {
+      padding: 0 1rem;
+      font-size: 1.25rem;
+    }
+    details[open] .faq-answer {
+      padding: 0.75rem 1rem 1rem;
+    }
+    .faq-subtitle {
+        font-size: 1.2rem;
+      }
+    
+  }
+  

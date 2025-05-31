@@ -1,14 +1,16 @@
-
-document.addEventListener("DOMContentLoaded", () => {
+export function initSellCrypto() {
   // ———————————— SELL MODAL ELEMENTS ————————————
-  const sellCryptoLink   = document.getElementById("sellCryptoLink");
-  const sellModal        = document.getElementById("sellCryptoModal");
-  const sellCloseBtn     = sellModal.querySelector("[data-sell-close]");
-  const sellCryptoForm   = document.getElementById("sellCryptoForm");
-  const sellButton       = document.getElementById("sellButton");
+  const sellCryptoLink = document.getElementById("sellCryptoLink");
+  const sellModal = document.getElementById("sellCryptoModal");
+  const sellCloseBtn = sellModal.querySelector("[data-sell-close]");
+  const sellCryptoForm = document.getElementById("sellCryptoForm");
+  const sellButton = document.getElementById("sellButton");
 
-   // Helper function to enable the "Buy Now" button
-   const enableSellButton = () => {
+  if (!sellModal) return;   
+  if (!sellCryptoForm) return;
+
+  // Helper function to enable the "Buy Now" button
+  const enableSellButton = () => {
     sellButton.disabled = false;
     sellButton.style.opacity = 1;
     sellButton.style.cursor = "pointer";
@@ -23,24 +25,31 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const closeSellModal = () => (sellModal.style.display = "none");
 
-  sellCryptoLink.addEventListener("click", e => {
+  sellCryptoLink.addEventListener("click", (e) => {
     e.preventDefault();
     openSellModal();
   });
 
   sellCloseBtn.addEventListener("click", closeSellModal);
 
-  window.addEventListener("click", e => {
+  window.addEventListener("click", (e) => {
     if (e.target === sellModal) closeSellModal();
   });
 
-   // Enable "Buy Now" button if wallet is connected
-   if (window.walletData?.address) {
+  // Enable "Buy Now" button if wallet is connected
+  if (window.walletData?.address) {
     enableSellButton();
   }
-    sellCryptoForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      closeSellModal();
+  sellCryptoForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    closeSellModal();
   });
-});
+}
 
+window.initSellCrypto = initSellCrypto;
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("sellCryptoForm")) {
+    initSellCrypto();
+  }
+});

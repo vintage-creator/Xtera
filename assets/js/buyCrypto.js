@@ -1,7 +1,6 @@
 import { showToast } from "./util.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Select elements
+export function initBuyCrypto() {
   const buyCryptoLink = document.getElementById("buyCryptoLink");
   const modal = document.getElementById("buyCryptoModal");
   const closeModalButton = document.querySelector(".close-icon");
@@ -29,11 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Helper function to close modal
   const closeModal = () => (modal.style.display = "none");
-
-  buyCryptoLink?.addEventListener("click", (e) => {
-    e.preventDefault();
-    openModal();
-  });
 
   closeModalButton?.addEventListener("click", closeModal);
 
@@ -131,23 +125,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let symbol;
   symbol = currencySymbols[fiatCurrencySelect.value];
 
-  // Handle fiat currency selection
-  fiatCurrencySelect.addEventListener("change", (event) => {
-    const selectedCurrency = event.target.value;
-    symbol = currencySymbols[selectedCurrency];
-    updateMarkupFee();
-  });
-
-  // Check if user has crypto balance and show a suggestion
-  const checkUserBalanceAndSuggestSwap = () => {
-    if (window.walletData?.balance > 0) {
-      showToast(
-        "You already have crypto in your wallet. Consider swapping instead.",
-        "info"
-      );
-    }
-  };
-
   // Handle Fiat Amount Input Change (update markup fee)
   const updateMarkupFee = () => {
     const fiat = parseFloat(fiatAmountInput.value);
@@ -168,15 +145,47 @@ document.addEventListener("DOMContentLoaded", () => {
     closeModal();
   };
 
+  // Check if user has crypto balance and show a suggestion
+  const checkUserBalanceAndSuggestSwap = () => {
+    if (window.walletData?.balance > 0) {
+      showToast(
+        "You already have crypto in your wallet. Consider swapping instead.",
+        "info"
+      );
+    }
+  };
+
   // Enable "Buy Now" button if wallet is connected
   if (window.walletData?.address) {
     enableBuyButton();
     checkUserBalanceAndSuggestSwap();
   }
 
+  buyCryptoLink?.addEventListener("click", (e) => {
+    e.preventDefault();
+    openModal();
+  });
+
+  // Handle fiat currency selection
+  fiatCurrencySelect.addEventListener("change", (event) => {
+    const selectedCurrency = event.target.value;
+    symbol = currencySymbols[selectedCurrency];
+    updateMarkupFee();
+  });
+
   // Attach event listener for fiat amount input change
   fiatAmountInput.addEventListener("input", updateMarkupFee);
 
   // Attach form submit handler
-  buyCryptoForm.addEventListener("submit", handleFormSubmit);
+  if (buyCryptoForm) {
+    buyCryptoForm.addEventListener("submit", handleFormSubmit);
+  }
+}
+
+window.initBuyCrypto = initBuyCrypto;
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("buyCryptoForm")) {
+    initBuyCrypto();
+  }
 });

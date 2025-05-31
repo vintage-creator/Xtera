@@ -13,8 +13,17 @@
     <!-- 
     - favicon
   -->
-
     <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- MATERIAL ICONS CDN  -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
 
     <!-- 
     - custom css link
@@ -240,12 +249,7 @@
               <!-- Display the markup fee here -->
               <p id="markupFeeDisplay" style="font-size: 16px; color: #555"></p>
 
-              <button
-                type="submit"
-                id="buyButton"
-                class="purchase-btn"
-                onclick="  launchTransak('BUY');"
-              >
+              <button type="submit" id="buyButton" class="purchase-btn">
                 Buy Now
               </button>
             </form>
@@ -393,12 +397,7 @@
                 required
               />
 
-              <button
-                type="submit"
-                id="sellButton"
-                class="purchase-btn"
-                onclick="launchTransak('SELL');"
-              >
+              <button type="submit" id="sellButton" class="purchase-btn">
                 Sell Now
               </button>
             </form>
@@ -459,12 +458,15 @@
 
         <!-- Wallet Modal -->
         <div class="wallet-wrapper">
-          <button class="btn btn-outline" id="wallet-btn">Wallet</button>
+          <button class="btn btn-outline" id="wallet-btn">Sign In</button>
 
           <div id="wallet-modal" class="wallet-modal" style="display: none">
             <div class="modal-content">
-              <span id="close-btn" class="close-btn">&times;</span>
-              <h2
+              <div class="modal-header">
+                <button id="close-btn" class="close-btn">&times;</button>
+              </div>
+
+              <h3
                 style="
                   margin-top: 2rem;
                   color: rgb(48, 47, 47);
@@ -472,7 +474,7 @@
                 "
               >
                 Connect Your Wallet
-              </h2>
+              </h3>
 
               <div class="wallet-buttons">
                 <button id="connect-eth" class="wallet-icon-btn">
@@ -516,7 +518,9 @@
                 crypto asset exchange.
               </p>
 
-              <a href="#how-it-works" class="btn btn-primary">Get started</a>
+              <a href="/create-account.html" class="btn btn-primary"
+                >Get started</a
+              >
             </div>
 
             <figure class="hero-banner">
@@ -548,10 +552,6 @@
                 </li>
 
                 <li>
-                  <button class="tab-btn">BSC</button>
-                </li>
-
-                <li>
                   <button class="tab-btn">NFT</button>
                 </li>
 
@@ -576,7 +576,7 @@
                 </li>
               </ul>
 
-              <ul class="tab-content">
+              <ul class="tab-content" id="tab-content">
                 <li>
                   <div class="trend-card">
                     <div class="card-title-wrapper">
@@ -1453,68 +1453,79 @@
         - #APP
       -->
 
-      <section class="section app" aria-label="app" data-section>
-        <div class="container">
-          <div class="app-content">
-            <h2 class="h2 section-title">
-              Trade Anywhere, Anytime with JudeX
-            </h2>
-      
-            <p class="section-text">
-              JudeX lets you trade BTC and ETH options and futures with speed and confidence — right from your browser, on any device.
-            </p>
-      
-            <ul class="section-list">
-              <li class="section-item">
-                <div class="title-wrapper">
-                  <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
-                  <h3 class="h3 item-title">App-Like Experience</h3>
-                </div>
-                <p class="item-text">
-                  Install JudeX to your home screen for a smooth, native feel with zero downloads.
-                </p>
-              </li>
-      
-              <li class="section-item">
-                <div class="title-wrapper">
-                  <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
-                  <h3 class="h3 item-title">Trade Seamlessly</h3>
-                </div>
-                <p class="item-text">
-                  Buy, sell, and convert crypto instantly with integrated payment options.
-                </p>
-              </li>
-      
-              <li class="section-item">
-                <div class="title-wrapper">
-                  <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
-                  <h3 class="h3 item-title">Available on All Devices</h3>
-                </div>
-                <p class="item-text">
-                  Desktop or mobile — JudeX is always just a tap away.
-                </p>
-              </li>
-            </ul>
-      
-            <div class="app-wrapper">
-              <!-- No store buttons -->
+        <section class="section app" aria-label="app" data-section>
+          <div class="container">
+            <div class="app-content">
+              <h2 class="h2 section-title">
+                Trade Anywhere, Anytime with JudeX
+              </h2>
+
+              <p class="section-text">
+                JudeX lets you trade BTC and ETH options and futures with speed
+                and confidence — right from your browser, on any device.
+              </p>
+
+              <ul class="section-list">
+                <li class="section-item">
+                  <div class="title-wrapper">
+                    <ion-icon
+                      name="checkmark-circle"
+                      aria-hidden="true"
+                    ></ion-icon>
+                    <h3 class="h3 item-title">App-Like Experience</h3>
+                  </div>
+                  <p class="item-text">
+                    Install JudeX to your home screen for a smooth, native feel
+                    with zero downloads.
+                  </p>
+                </li>
+
+                <li class="section-item">
+                  <div class="title-wrapper">
+                    <ion-icon
+                      name="checkmark-circle"
+                      aria-hidden="true"
+                    ></ion-icon>
+                    <h3 class="h3 item-title">Trade Seamlessly</h3>
+                  </div>
+                  <p class="item-text">
+                    Buy, sell, and convert crypto instantly with integrated
+                    payment options.
+                  </p>
+                </li>
+
+                <li class="section-item">
+                  <div class="title-wrapper">
+                    <ion-icon
+                      name="checkmark-circle"
+                      aria-hidden="true"
+                    ></ion-icon>
+                    <h3 class="h3 item-title">Available on All Devices</h3>
+                  </div>
+                  <p class="item-text">
+                    Desktop or mobile — JudeX is always just a tap away.
+                  </p>
+                </li>
+              </ul>
+
+              <div class="app-wrapper">
+                <!-- No store buttons -->
+              </div>
+            </div>
+
+            <div class="app-banner">
+              <img
+                src="./assets/images/app-banner.png"
+                width="618"
+                height="526"
+                loading="lazy"
+                alt="JudeX app preview"
+                class="w-100"
+              />
+              <span class="span">Install JudeX from browser</span>
             </div>
           </div>
-      
-          <div class="app-banner">
-            <img
-              src="./assets/images/app-banner.png"
-              width="618"
-              height="526"
-              loading="lazy"
-              alt="JudeX app preview"
-              class="w-100"
-            />
-            <span class="span">Install JudeX from browser</span>
-          </div>
-        </div>
-      </section>
-      
+        </section>
       </article>
     </main>
 
@@ -1565,9 +1576,8 @@
             </li>
 
             <li>
-              <a href="#" class="footer-link">Launchpad</a>
+              <a href="#market-update" class="footer-link">Markets</a>
             </li>
-
           </ul>
 
           <ul class="footer-list">
@@ -1584,9 +1594,8 @@
             </li>
 
             <li>
-              <a href="#market-update" class="footer-link">Markets</a>
+              <a href="#swapCryptoLink" class="footer-link">Swap Crypto</a>
             </li>
-
           </ul>
 
           <ul class="footer-list">
@@ -1595,15 +1604,21 @@
             </li>
 
             <li>
-              <a href="#" class="footer-link">Help Center</a>
+              <a href="/help-center.html" class="footer-link">Help Center</a>
             </li>
 
             <li>
-              <a href="#" class="footer-link">Referral Program</a>
+              <a href="/referral-program.html" class="footer-link"
+                >Referral Program</a
+              >
             </li>
 
             <li>
-              <a href="#" class="footer-link">Trading Rules</a>
+              <a
+                href="https://docs.google.com/document/d/1DNe9-yg3iJKTY4vGCcKcTUDGdYd3jjW10nmrX6fsKp8/edit?usp=sharing"
+                class="footer-link"
+                >Trading Rules</a
+              >
             </li>
           </ul>
 
@@ -1613,15 +1628,13 @@
             </li>
 
             <li>
-              <a href="#" class="footer-link">Careers</a>
+              <a href="/FAQ.html" class="footer-link">FAQ</a>
             </li>
 
             <li>
-              <a href="#" class="footer-link">Partnerships</a>
-            </li>
-
-            <li>
-              <a href="#swapCryptoLink" class="footer-link">Swap</a>
+              <a href="/terms-of-service.html" class="footer-link"
+                >Terms of Service</a
+              >
             </li>
           </ul>
         </div>
@@ -1629,7 +1642,9 @@
 
       <div class="footer-bottom">
         <div class="container">
-          <p class="copyright">&copy; 2025, JudeX Technologies. All Rights Reserved.</p>
+          <p class="copyright">
+            &copy; 2025, JudeX Technologies. All Rights Reserved.
+          </p>
 
           <ul class="social-list">
             <li>
@@ -1663,10 +1678,12 @@
     - custom js link
   -->
     <script src="./assets/js/script.js" defer></script>
+    <script type="module" src="/assets/js/auth.js" defer></script>
 
     <!-- 
     - wallet js link
   -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.86.2/lib/index.iife.min.js"></script>
     <script type="module" src="./assets/js/wallet.js" defer></script>
 
@@ -1790,7 +1807,49 @@
       const sellButton = document.getElementById("sellButton");
       const sellFiatSelect = document.getElementById("sellFiatCurrency");
 
-      function launchTransak(mode) {
+      function getStoredToken() {
+        const raw = localStorage.getItem("authToken");
+        if (!raw) return null;
+        try {
+          return JSON.parse(raw).token;
+        } catch {
+          return null;
+        }
+      }
+
+      async function ensure2FA() {
+        const token = getStoredToken();
+        if (!token) {
+          showToast("Please log in first", "warning");
+          setTimeout(() => (window.location.href = "/"), 1200);
+          throw new Error("not-authenticated");
+        }
+
+        const resp = await fetch("/api/user/profile", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (resp.status === 401) {
+          showToast("Session expired, please log in again", "warning");
+          setTimeout(() => (window.location.href = "/"), 1200);
+          throw new Error("session-expired");
+        }
+        if (!resp.ok) {
+          throw new Error(`Unexpected error: ${resp.status}`);
+        }
+
+        const profile = await resp.json();
+        if (!profile.twoFAEnabled) {
+          showToast("Please enable 2FA first", "warning");
+          setTimeout(() => (window.location.href = "/enable-2fa.html"), 1200);
+          throw new Error("2fa-not-enabled");
+        }
+
+        return profile;
+      }
+
+      async function launchTransak(mode) {
         // ------- Buy Value -----------------------------
         const selectedCrypto = cryptoSelect.value.toUpperCase();
         const fiatAmount = parseFloat(fiatAmountInput.value).toFixed(2);
@@ -1815,6 +1874,38 @@
           return showToast("Please connect your wallet first.", "warning");
         }
 
+        let profile;
+        try {
+          profile = await ensure2FA();
+        } catch {
+          return;
+        }
+
+        const {
+          firstName,
+          lastName,
+          email,
+          mobileNumber,
+          dateOfBirth,
+          address: addr,
+        } = profile;
+
+        const userData = {
+          firstName,
+          lastName,
+          email,
+          mobileNumber,
+          dob: dateOfBirth.split("T")[0],
+          address: {
+            addressLine1: addr.addressLine1,
+            addressLine2: addr.addressLine2 || "",
+            city: addr.city,
+            state: addr.state,
+            postCode: addr.postalCode,
+            countryCode: addr.countryCode,
+          },
+        };
+
         const opts = {
           apiKey: "6b1d40eb-87e6-4d97-8c6a-d27afaa19f53",
           environment: "STAGING", // or 'PRODUCTION'
@@ -1829,6 +1920,7 @@
           widgetWidth: "450px",
           widgetHeight: "650px",
           redirectURL: "",
+          userData,
         };
 
         if (mode === "BUY") {
@@ -1862,6 +1954,22 @@
           transak.close();
         });
       }
+      document.addEventListener("DOMContentLoaded", () => {
+        const buyBtn = document.getElementById("buyButton");
+        const sellBtn = document.getElementById("sellButton");
+
+        buyBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          await ensure2FA();
+          launchTransak("BUY");
+        });
+
+        sellBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          await ensure2FA();
+          launchTransak("SELL");
+        });
+      });
     </script>
   </body>
 </html>

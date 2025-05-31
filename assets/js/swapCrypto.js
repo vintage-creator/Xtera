@@ -1,5 +1,7 @@
 import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.esm.min.js";
 import { showToast } from "./util.js";
+import { restoreWalletDataOnDashboard } from "./dashboard.js";
+
 
 const TOKEN_DECIMALS = {
   DAI: 18,
@@ -15,17 +17,22 @@ const TOKEN_ADDRESSES = {
   // …add any others you let users swap
 };
 
+
 // ————————— SWAP INTEGRATION —————————
-document.addEventListener("DOMContentLoaded", () => {
+export function initSwapCrypto() {
+  restoreWalletDataOnDashboard();
+
   const swapLink = document.getElementById("swapCryptoLink");
   const swapModal = document.getElementById("swapCryptoModal");
   const swapClose = document.querySelector("[data-swap-close]");
-  const getQuoteBtn = document.getElementById("getSwapQuoteBtn");
   const execBtn = document.getElementById("executeSwapBtn");
   const quoteInfo = document.getElementById("swapQuoteInfo");
   const swapForm = document.getElementById("swapForm");
+  const getQuoteBtn = document.getElementById("getSwapQuoteBtn");
 
   let lastSwapQuote = null;
+
+  if (!swapForm) return;
 
   // disable by default:
   const disableSwapButton = () => {
@@ -39,10 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
     getQuoteBtn.style.cursor = "pointer";
   };
 
-  disableSwapButton();
 
   // open/close modal
   swapLink.addEventListener("click", () => {
+    disableSwapButton();
+    
     if (window.walletData?.address) enableSwapButton();
     else disableSwapButton();
     swapModal.style.display = "block";
@@ -98,9 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     try {
-      const res = await fetch(
-        `https://judex.onrender.com/api/quote?${params.toString()}`
-      );
+      const res = await fetch(`/api/quote?${params.toString()}`);
 
       if (!res.ok) {
         const err = await res.json();
@@ -157,34 +163,79 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 2) Execute the swap
-  execBtn.addEventListener("click", async () => {
-    if (!lastSwapQuote) return;
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+  if(execBtn) {
+    execBtn.addEventListener("click", async () => {
+      if (!lastSwapQuote) return;
+  
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = provider.getSigner();
+  
+        // 1) Make sure the router is approved to pull your sellToken
+        await ensureApproval(
+          lastSwapQuote.sellToken,
+          lastSwapQuote.transaction.to,
+          lastSwapQuote.sellAmount,
+          signer
+        );
+  
+        // 2) Send the swap transaction
+        const txResponse = await signer.sendTransaction({
+          to: lastSwapQuote.transaction.to,
+          data: lastSwapQuote.transaction.data,
+          value: lastSwapQuote.transaction.value || "0",
+        });
+  
+        showToast("Swapping… TX sent: " + txResponse.hash, "info");
+        const receipt = await txResponse.wait();
+        showToast("Swap complete!", "success");
+  
+        // 3) Record it in your backend
+        const resp = await fetch("/api/swap", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getAuthToken()}`,
+          },
+          body: JSON.stringify({
+            txHash: receipt.transactionHash,
+            fromToken: lastSwapQuote.sellToken,
+            toToken: lastSwapQuote.buyToken,
+            fromAmount: parseFloat(
+              ethers.utils.formatUnits(
+                lastSwapQuote.sellAmount,
+                lastSwapQuote.sellTokenDecimals
+              )
+            ),
+            toAmount: parseFloat(
+              ethers.utils.formatUnits(
+                lastSwapQuote.buyAmount,
+                lastSwapQuote.buyTokenDecimals
+              )
+            ),
+          }),
+        });
+  
+        if (!resp.ok) console.warn("Failed to record swap on backend");
+  
+        // 4) Reset your UI
+        swapModal.style.display = "none";
+        execBtn.style.display = "none";
+        quoteInfo.textContent = "";
+        getQuoteBtn.style.display = "inline-block";
+      } catch (err) {
+        console.error(err);
+        showToast("Swap failed: " + err.message, "error");
+      }
+    });
+  }
+}
 
-      await ensureApproval(
-        lastSwapQuote.sellToken, // the token you’re selling
-        lastSwapQuote.transaction.to, // 0x router address
-        lastSwapQuote.sellAmount, // base‐units amount
-        signer
-      );
+window.initSwapCrypto = initSwapCrypto;
 
-      const tx = await signer.sendTransaction({
-        to: lastSwapQuote.transaction.to,
-        data: lastSwapQuote.transaction.data,
-        value: lastSwapQuote.transaction.value || "0",
-      });
-
-      showToast("Swapping… TX sent: " + tx.hash, "info");
-      await tx.wait();
-      showToast("Swap complete!", "success");
-      swapModal.style.display = "none";
-      execBtn.style.display = "none";
-      quoteInfo.innerHTML = "";
-      getQuoteBtn.style.display = "inline-block";
-    } catch (err) {
-      showToast("Swap failed: " + err.message, "error");
-    }
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("swapForm")) {
+    initSwapCrypto();
+  }
 });

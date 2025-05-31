@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JudeX — Help Center</title>
+    <script
+      async
+      src="https://cdn.transak.com/js/sdk/1.4.1/transak.js"
+    ></script>
+    <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/referral.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#2f324180" />
+  </head>
+
+  <body>
+    <!-- 
+    - #HEADER
+  -->
+
+    ```
+    <header class="header" data-header>
+      <!-- Ticker Banner -->
+      <div class="crypto-ticker">
+        <div id="ticker" class="ticker-content">Loading crypto prices...</div>
+      </div>
+
+      <div class="container">
+        <a href="/" class="logo">
+          <img
+            src="./assets/images/logo.svg"
+            width="32"
+            height="32"
+            alt="JudeX logo"
+          />
+          JudeX
+        </a>
+
+        <nav class="navbar" data-navbar>
+          <ul class="navbar-list">
+            <li class="navbar-item">
+              <a href="#" class="navbar-link active" data-nav-link>Home</a>
+            </li>
+
+            <li class="navbar-item">
+              <button class="navbar-link" id="buyCryptoLink" data-nav-link>
+                Buy Crypto
+              </button>
+            </li>
+
+            <li class="navbar-item">
+              <button class="navbar-link" id="sellCryptoLink" data-nav-link>
+                Sell Crypto
+              </button>
+            </li>
+
+            <li class="navbar-item">
+              <button class="navbar-link" id="swapCryptoLink" data-nav-link>
+                Swap
+              </button>
+            </li>
+
+            <li class="navbar-item">
+              <a href="#market-update" class="navbar-link" data-nav-link
+                >Markets</a
+              >
+            </li>
+          </ul>
+        </nav>
+
+        <button
+          class="nav-toggle-btn"
+          aria-label="Toggle menu"
+          data-nav-toggler
+        >
+          <span class="line line-1"></span>
+          <span class="line line-2"></span>
+          <span class="line line-3"></span>
+        </button>
+
+        <!-- Buy Crypto Modal -->
+        <div id="buyCryptoModal" class="modal-wrapper">
+          <div class="modal-box">
+            <span class="close-icon">&times;</span>
+            <h2
+              class="modal-heading"
+              style="color: rgb(48, 47, 47); margin-bottom: 4rem"
+            >
+              Buy Crypto with Fiat
+            </h2>
+            <form id="buyCryptoForm">
+              <!-- Crypto Selection -->
+              <label for="cryptoSelect" class="input-label"
+                >Select Crypto</label
+              >
+              <select id="cryptoSelect" class="currency-select">
+                <option value="btc">Bitcoin (BTC)</option>
+                <option value="eth">Ethereum (ETH)</option>
+                <option value="usdt">Tether (USDT)</option>
+                <option value="xrp">Ripple (XRP)</option>
+                <option value="ada">Cardano (ADA)</option>
+                <option value="bnb">Binance Coin (BNB)</option>
+                <option value="sol">Solana (SOL)</option>
+                <option value="doge">Dogecoin (DOGE)</option>
+                <option value="dot">Polkadot (DOT)</option>
+                <option value="ltc">Litecoin (LTC)</option>
+                <option value="shiba">Shiba Inu (SHIB)</option>
+                <option value="matic">Polygon (MATIC)</option>
+                <option value="avalanche">Avalanche (AVAX)</option>
+                <option value="link">Chainlink (LINK)</option>
+                <option value="uniswap">Uniswap (UNI)</option>
+                <option value="ftm">Fantom (FTM)</option>
+                <option value="xlm">Stellar (XLM)</option>
+                <option value="trx">TRON (TRX)</option>
+                <option value="nearnetwork">NEAR Protocol (NEAR)</option>
+                <option value="algo">Algorand (ALGO)</option>
+              </select>
+
+              <!-- Fiat Currency Selection with Flag Emojis -->
+              <label for="fiatCurrency" class="input-label"
+                >Select Fiat Currency</label
+              >
+              <select id="fiatCurrency" class="currency-select">
+                <option value="eur">🇪🇺 EUR - Euro</option>
+                <option value="gbp">🇬🇧 GBP - British Pound</option>
+                <option value="inr">🇮🇳 INR - Indian Rupee</option>
+                <option value="usd">🇺🇸 USD - US Dollar</option>
+                <option value="chf">🇨🇭 CHF - Swiss Franc</option>
+                <option value="sek">🇸🇪 SEK - Swedish Krona</option>
+                <option value="pln">🇵🇱 PLN - Polish Zloty</option>
+                <option value="nok">🇳🇴 NOK - Norwegian Krone</option>
+                <option value="dkk">🇩🇰 DKK - Danish Krone</option>
+                <option value="nzd">🇳🇿 NZD - New Zealand Dollar</option>
+                <option value="mxn">🇲🇽 MXN - Mexican Peso</option>
+                <option value="cad">🇨🇦 CAD - Canadian Dollar</option>
+                <option value="aud">🇦🇺 AUD - Australian Dollar</option>
+                <option value="ars">🇦🇷 ARS - Argentine Peso</option>
+                <option value="brl">🇧🇷 BRL - Brazilian Real</option>
+                <option value="clp">🇨🇱 CLP - Chilean Peso</option>
+                <option value="crc">🇨🇷 CRC - Costa Rican Colon</option>
+                <option value="dop">🇩🇴 DOP - Dominican Peso</option>
+                <option value="idr">🇮🇩 IDR - Indonesian Rupiah</option>
+                <option value="ils">🇮🇱 ILS - Israeli Shekel</option>
+                <option value="jpy">🇯🇵 JPY - Japanese Yen</option>
+                <option value="krw">🇰🇷 KRW - South Korean Won</option>
+                <option value="myr">🇲🇾 MYR - Malaysian Ringgit</option>
+                <option value="pyg">🇵🇾 PYG - Paraguayan Guarani</option>
+                <option value="pen">🇵🇪 PEN - Peruvian Sol</option>
+                <option value="php">🇵🇭 PHP - Philippine Peso</option>
+                <option value="sgd">🇸🇬 SGD - Singapore Dollar</option>
+                <option value="fjd">🇫🇯 FJD - Fiji Dollar</option>
+                <option value="huf">🇭🇺 HUF - Forint</option>
+                <option value="kes">🇰🇪 KES - Kenyan Shilling</option>
+                <option value="mdl">🇲🇩 MDL - Moldovan Leu</option>
+                <option value="bmd">🇧🇲 BMD - Bermudian Dollar</option>
+                <option value="fkp">🇫🇰 FKP - Falkland Islands Pound</option>
+                <option value="czk">🇨🇿 CZK - Czech Koruna</option>
+                <option value="isk">🇮🇸 ISK - Iceland Krona</option>
+                <option value="ron">🇷🇴 RON - Romanian Leu</option>
+                <option value="aoa">🇦🇴 AOA - Kwanza</option>
+                <option value="bzd">🇧🇿 BZD - Belize Dollar</option>
+                <option value="bnd">🇧🇳 BND - Brunei Dollar</option>
+                <option value="kmf">🇰🇾 KMF - Comoro Franc</option>
+                <option value="djf">🇩🇯 DJF - Djibouti Franc</option>
+                <option value="xcd">🇬🇩 XCD - East Caribbean Dollar</option>
+                <option value="gel">🇬🇪 GEL - Lari</option>
+                <option value="gtq">🇬🇹 GTQ - Quetzal</option>
+                <option value="hnl">🇭🇳 HNL - Lempira</option>
+                <option value="hkd">🇭🇰 HKD - Hong Kong Dollar</option>
+                <option value="kzt">🇰🇿 KZT - Tenge</option>
+                <option value="kgs">🇰🇬 KGS - Som</option>
+                <option value="mga">🇲🇬 MGA - Malagasy Ariary</option>
+                <option value="mwk">🇲🇼 MWK - Kwacha</option>
+                <option value="mru">🇲🇷 MRU - Ouguiya</option>
+                <option value="omr">🇴🇲 OMR - Rial Omani</option>
+                <option value="pgk">🇵🇬 PGK - Kina</option>
+                <option value="rwf">🇷🇼 RWF - Rwanda Franc</option>
+                <option value="stn">🇸🇹 STN - Dobra</option>
+                <option value="scr">🇸🇨 SCR - Seychelles Rupee</option>
+                <option value="sbd">🇸🇧 SBD - Solomon Islands Dollar</option>
+                <option value="srd">🇸🇷 SRD - Surinam Dollar</option>
+                <option value="szl">🇿🇦 SZL - Lilangeni</option>
+                <option value="tjs">🇹🇯 TJS - Somoni</option>
+                <option value="top">🇹🇴 TOP - Pa’anga</option>
+                <option value="tmt">🇹🇲 TMT - Turkmenistan New Manat</option>
+                <option value="uyu">🇺🇾 UYU - Peso Uruguayo</option>
+                <option value="cop">🇨🇴 COP - Colombian Peso</option>
+                <option value="twd">🇹🇼 TWD - Taiwanese Dollar</option>
+                <option value="ghs">🇬🇭 GHS - Ghanaian Cedi</option>
+                <option value="khr">🇰🇭 KHR - Cambodian Riel</option>
+                <option value="rsd">🇷🇸 RSD - Serbian Dinar</option>
+                <option value="bhd">🇧🇭 BHD - Bahraini Dinar</option>
+                <option value="mkd">🇲🇰 MKD - Macedonian Denar</option>
+                <option value="kwd">🇰🇼 KWD - Kuwaiti Dinar</option>
+                <option value="amd">🇦🇲 AMD - Armenian Dram</option>
+                <option value="ang">
+                  🇦🇼 ANG - Netherlands Antilles Guilder
+                </option>
+                <option value="azn">🇦🇿 AZN - Azerbaijani Manat</option>
+                <option value="bsd">🇧🇸 BSD - Bahamian Dollar</option>
+                <option value="kyd">🇰🇾 KYD - Cayman Islands Dollar</option>
+                <option value="cve">🇨🇻 CVE - Cape Verdean Escudo</option>
+                <option value="bam">🇧🇦 BAM - BH Convertible Mark</option>
+                <option value="jod">🇯🇴 JOD - Jordanian Dinar</option>
+                <option value="ttd">🇹🇹 TTD - Trinidad & Tobago Dollar</option>
+                <option value="pab">🇵🇦 PAB - Panamanian Balboa</option>
+                <option value="dzd">🇩🇿 DZD - Algerian Dinar</option>
+              </select>
+
+              <label for="fiatAmount" class="input-label">Amount in Fiat</label>
+              <input
+                type="number"
+                id="fiatAmount"
+                class="input-field"
+                placeholder="Enter amount in USD"
+                required
+              />
+
+              <!-- Display the markup fee here -->
+              <p id="markupFeeDisplay" style="font-size: 16px; color: #555"></p>
+
+              <button type="submit" id="buyButton" class="purchase-btn">
+                Buy Now
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Sell Crypto Modal -->
+        <div id="sellCryptoModal" class="modal-wrapper">
+          <div class="modal-box">
+            <span class="close-icon" data-sell-close>&times;</span>
+            <h2
+              class="modal-heading"
+              class="modal-heading"
+              style="color: rgb(48, 47, 47); margin-bottom: 4rem"
+            >
+              Sell Crypto for Fiat
+            </h2>
+            <form id="sellCryptoForm">
+              <!-- Crypto Selection -->
+              <label for="sellCryptoSelect" class="input-label"
+                >Select Crypto</label
+              >
+              <select id="sellCryptoSelect" class="currency-select">
+                <option value="btc">Bitcoin (BTC)</option>
+                <option value="eth">Ethereum (ETH)</option>
+                <option value="usdt">Tether (USDT)</option>
+                <option value="xrp">Ripple (XRP)</option>
+                <option value="ada">Cardano (ADA)</option>
+                <option value="bnb">Binance Coin (BNB)</option>
+                <option value="sol">Solana (SOL)</option>
+                <option value="doge">Dogecoin (DOGE)</option>
+                <option value="dot">Polkadot (DOT)</option>
+                <option value="ltc">Litecoin (LTC)</option>
+                <option value="shiba">Shiba Inu (SHIB)</option>
+                <option value="matic">Polygon (MATIC)</option>
+                <option value="avalanche">Avalanche (AVAX)</option>
+                <option value="link">Chainlink (LINK)</option>
+                <option value="uniswap">Uniswap (UNI)</option>
+                <option value="ftm">Fantom (FTM)</option>
+                <option value="xlm">Stellar (XLM)</option>
+                <option value="trx">TRON (TRX)</option>
+                <option value="nearnetwork">NEAR Protocol (NEAR)</option>
+                <option value="algo">Algorand (ALGO)</option>
+              </select>
+
+              <label for="sellFiatCurrency" class="input-label">
+                Select Fiat Currency
+              </label>
+              <select id="sellFiatCurrency" class="currency-select">
+                <option value="eur">🇪🇺 EUR - Euro</option>
+                <option value="gbp">🇬🇧 GBP - British Pound</option>
+                <option value="inr">🇮🇳 INR - Indian Rupee</option>
+                <option value="usd">🇺🇸 USD - US Dollar</option>
+                <option value="chf">🇨🇭 CHF - Swiss Franc</option>
+                <option value="sek">🇸🇪 SEK - Swedish Krona</option>
+                <option value="pln">🇵🇱 PLN - Polish Zloty</option>
+                <option value="nok">🇳🇴 NOK - Norwegian Krone</option>
+                <option value="dkk">🇩🇰 DKK - Danish Krone</option>
+                <option value="nzd">🇳🇿 NZD - New Zealand Dollar</option>
+                <option value="mxn">🇲🇽 MXN - Mexican Peso</option>
+                <option value="cad">🇨🇦 CAD - Canadian Dollar</option>
+                <option value="aud">🇦🇺 AUD - Australian Dollar</option>
+                <option value="ars">🇦🇷 ARS - Argentine Peso</option>
+                <option value="brl">🇧🇷 BRL - Brazilian Real</option>
+                <option value="clp">🇨🇱 CLP - Chilean Peso</option>
+                <option value="crc">🇨🇷 CRC - Costa Rican Colon</option>
+                <option value="dop">🇩🇴 DOP - Dominican Peso</option>
+                <option value="idr">🇮🇩 IDR - Indonesian Rupiah</option>
+                <option value="ils">🇮🇱 ILS - Israeli Shekel</option>
+                <option value="jpy">🇯🇵 JPY - Japanese Yen</option>
+                <option value="krw">🇰🇷 KRW - South Korean Won</option>
+                <option value="myr">🇲🇾 MYR - Malaysian Ringgit</option>
+                <option value="pyg">🇵🇾 PYG - Paraguayan Guarani</option>
+                <option value="pen">🇵🇪 PEN - Peruvian Sol</option>
+                <option value="php">🇵🇭 PHP - Philippine Peso</option>
+                <option value="sgd">🇸🇬 SGD - Singapore Dollar</option>
+                <option value="fjd">🇫🇯 FJD - Fiji Dollar</option>
+                <option value="huf">🇭🇺 HUF - Forint</option>
+                <option value="kes">🇰🇪 KES - Kenyan Shilling</option>
+                <option value="mdl">🇲🇩 MDL - Moldovan Leu</option>
+                <option value="bmd">🇧🇲 BMD - Bermudian Dollar</option>
+                <option value="fkp">🇫🇰 FKP - Falkland Islands Pound</option>
+                <option value="czk">🇨🇿 CZK - Czech Koruna</option>
+                <option value="isk">🇮🇸 ISK - Iceland Krona</option>
+                <option value="ron">🇷🇴 RON - Romanian Leu</option>
+                <option value="aoa">🇦🇴 AOA - Kwanza</option>
+                <option value="bzd">🇧🇿 BZD - Belize Dollar</option>
+                <option value="bnd">🇧🇳 BND - Brunei Dollar</option>
+                <option value="kmf">🇰🇾 KMF - Comoro Franc</option>
+                <option value="djf">🇩🇯 DJF - Djibouti Franc</option>
+                <option value="xcd">🇬🇩 XCD - East Caribbean Dollar</option>
+                <option value="gel">🇬🇪 GEL - Lari</option>
+                <option value="gtq">🇬🇹 GTQ - Quetzal</option>
+                <option value="hnl">🇭🇳 HNL - Lempira</option>
+                <option value="hkd">🇭🇰 HKD - Hong Kong Dollar</option>
+                <option value="kzt">🇰🇿 KZT - Tenge</option>
+                <option value="kgs">🇰🇬 KGS - Som</option>
+                <option value="mga">🇲🇬 MGA - Malagasy Ariary</option>
+                <option value="mwk">🇲🇼 MWK - Kwacha</option>
+                <option value="mru">🇲🇷 MRU - Ouguiya</option>
+                <option value="omr">🇴🇲 OMR - Rial Omani</option>
+                <option value="pgk">🇵🇬 PGK - Kina</option>
+                <option value="rwf">🇷🇼 RWF - Rwanda Franc</option>
+                <option value="stn">🇸🇹 STN - Dobra</option>
+                <option value="scr">🇸🇨 SCR - Seychelles Rupee</option>
+                <option value="sbd">🇸🇧 SBD - Solomon Islands Dollar</option>
+                <option value="srd">🇸🇷 SRD - Surinam Dollar</option>
+                <option value="szl">🇿🇦 SZL - Lilangeni</option>
+                <option value="tjs">🇹🇯 TJS - Somoni</option>
+                <option value="top">🇹🇴 TOP - Pa’anga</option>
+                <option value="tmt">🇹🇲 TMT - Turkmenistan New Manat</option>
+                <option value="uyu">🇺🇾 UYU - Peso Uruguayo</option>
+                <option value="cop">🇨🇴 COP - Colombian Peso</option>
+                <option value="twd">🇹🇼 TWD - Taiwanese Dollar</option>
+                <option value="ghs">🇬🇭 GHS - Ghanaian Cedi</option>
+                <option value="khr">🇰🇭 KHR - Cambodian Riel</option>
+                <option value="rsd">🇷🇸 RSD - Serbian Dinar</option>
+                <option value="bhd">🇧🇭 BHD - Bahraini Dinar</option>
+                <option value="mkd">🇲🇰 MKD - Macedonian Denar</option>
+                <option value="kwd">🇰🇼 KWD - Kuwaiti Dinar</option>
+                <option value="amd">🇦🇲 AMD - Armenian Dram</option>
+                <option value="ang">
+                  🇦🇼 ANG - Netherlands Antilles Guilder
+                </option>
+                <option value="azn">🇦🇿 AZN - Azerbaijani Manat</option>
+                <option value="bsd">🇧🇸 BSD - Bahamian Dollar</option>
+                <option value="kyd">🇰🇾 KYD - Cayman Islands Dollar</option>
+                <option value="cve">🇨🇻 CVE - Cape Verdean Escudo</option>
+                <option value="bam">🇧🇦 BAM - BH Convertible Mark</option>
+                <option value="jod">🇯🇴 JOD - Jordanian Dinar</option>
+                <option value="ttd">🇹🇹 TTD - Trinidad & Tobago Dollar</option>
+                <option value="pab">🇵🇦 PAB - Panamanian Balboa</option>
+                <option value="dzd">🇩🇿 DZD - Algerian Dinar</option>
+              </select>
+
+              <label for="cryptoAmount" class="input-label">
+                Amount of Crypto to Sell
+              </label>
+              <input
+                type="number"
+                id="cryptoAmount"
+                class="input-field"
+                placeholder="e.g. 0.1"
+                step="any"
+                required
+              />
+
+              <button type="submit" id="sellButton" class="purchase-btn">
+                Sell Now
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Swap Crypto Modal -->
+        <div id="swapCryptoModal" class="modal-wrapper">
+          <div class="modal-box">
+            <span class="close-icon" data-swap-close>&times;</span>
+            <h2
+              class="modal-heading"
+              style="margin-bottom: 4rem; color: rgb(48, 47, 47)"
+            >
+              Swap Tokens
+            </h2>
+            <form id="swapForm">
+              <label for="sellToken" class="input-label">Sell Token</label>
+              <select id="sellToken" class="currency-select">
+                <option value="DAI">DAI</option>
+                <option value="USDC">USDC</option>
+                <option value="WETH">WETH</option>
+              </select>
+
+              <label for="sellAmount" class="input-label">Amount to Sell</label>
+              <input
+                type="number"
+                id="sellAmount"
+                class="input-field"
+                placeholder="e.g. 10"
+                step="any"
+                required
+              />
+
+              <label for="buyToken" class="input-label">Buy Token</label>
+              <select id="buyToken" class="currency-select">
+                <option value="USDC">USDC</option>
+                <option value="DAI">DAI</option>
+                <option value="WETH">WETH</option>
+              </select>
+
+              <p id="swapQuoteInfo" style="margin: 1rem 0; color: #333"></p>
+
+              <button type="button" id="getSwapQuoteBtn" class="purchase-btn">
+                Get Quote
+              </button>
+              <button
+                type="button"
+                id="executeSwapBtn"
+                class="purchase-btn"
+                style="display: none"
+              >
+                Confirm & Swap
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Wallet Modal -->
+        <div class="wallet-wrapper">
+          <button class="btn btn-outline" id="wallet-btn">Sign In</button>
+
+          <div id="wallet-modal" class="wallet-modal" style="display: none">
+            <div class="modal-content">
+              <span id="close-btn" class="close-btn">&times;</span>
+              <h3
+                style="
+                  margin-top: 2rem;
+                  color: rgb(48, 47, 47);
+                  margin-bottom: 2rem;
+                "
+              >
+                Connect Your Wallet
+              </h3>
+
+              <div class="wallet-buttons">
+                <button id="connect-eth" class="wallet-icon-btn">
+                  <img src="/assets/images/eth.png" alt="Ethereum" /> Ethereum
+                </button>
+                <button id="connect-sol" class="wallet-icon-btn">
+                  <img src="/assets/images/sol.jpg" alt="Solana" /> Solana
+                </button>
+              </div>
+
+              <div id="wallet-info" style="display: none; margin-top: 10px">
+                <div id="wallet-address">Wallet Address: Not Connected</div>
+                <div id="wallet-balance">Balance: 0</div>
+              </div>
+              <button
+                id="disconnect-btn"
+                class="btn btn-danger"
+                style="display: none; margin-top: 10px"
+              >
+                Disconnect Wallet
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    ```
+
+    <main class="referral-container">
+      <h1 class="referral-title">Referral Program</h1>
+    
+      <div class="referral-animation">
+        <img src="./assets/images/coming_soon.gif" alt="Coming Soon" />
+      </div>
+    
+      <p class="referral-intro">
+        Our Referral Program is coming soon!<br />
+        Sign up, share your unique link, and earn rewards when friends trade on JudeX.
+      </p>
+    
+      <div class="referral-emoji">🤝</div>
+    
+      <p class="referral-description">
+        We’re finalizing the details—stay tuned. Check back here for launch dates,
+        reward tiers, and step-by-step instructions on how to invite friends.
+      </p>
+    
+      <a href="/" class="referral-btn">Back to Home</a>
+    </main>
+    
+
+    <footer class="footer">
+      <div class="footer-top" data-section>
+        <div class="container">
+          <div class="footer-brand">
+            <a href="#" class="logo">
+              <img
+                src="./assets/images/logo.svg"
+                width="50"
+                height="50"
+                alt="JudeX logo"
+              />
+              JudeX
+            </a>
+
+            <h2 class="footer-title"></h2>
+
+            <a href="tel:+123456789101" class="footer-contact-link"
+              >+234 813 530 0009</a
+            >
+
+            <a href="mailto:hello.cryptex@gmail.com" class="footer-contact-link"
+              >hello@judex.com</a
+            >
+
+            <address class="footer-contact-link">
+              Block 23, Adekoya Estate, Ikeja 110018
+            </address>
+          </div>
+
+          <ul class="footer-list">
+            <li>
+              <p class="footer-list-title">Products</p>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Spot</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Exchange</a>
+            </li>
+
+            <li>
+              <a href="#market-update" class="footer-link">Markets</a>
+            </li>
+          </ul>
+
+          <ul class="footer-list">
+            <li>
+              <p class="footer-list-title">Services</p>
+            </li>
+
+            <li>
+              <a href="#buyCryptoLink" class="footer-link">Buy Crypto</a>
+            </li>
+
+            <li>
+              <a href="#sellCryptoLink" class="footer-link">Sell Crypto</a>
+            </li>
+
+            <li>
+              <a href="#swapCryptoLink" class="footer-link">Swap Crypto</a>
+            </li>
+          </ul>
+
+          <ul class="footer-list">
+            <li>
+              <p class="footer-list-title">Support</p>
+            </li>
+
+            <li>
+              <a href="/help-center.html" class="footer-link">Help Center</a>
+            </li>
+
+            <li>
+              <a href="/referral-program.html" class="footer-link"
+                >Referral Program</a
+              >
+            </li>
+
+            <li>
+              <a
+                href="https://docs.google.com/document/d/1DNe9-yg3iJKTY4vGCcKcTUDGdYd3jjW10nmrX6fsKp8/edit?usp=sharing"
+                class="footer-link"
+                >Trading Rules</a
+              >
+            </li>
+          </ul>
+
+          <ul class="footer-list">
+            <li>
+              <p class="footer-list-title">About Us</p>
+            </li>
+
+            <li>
+              <a href="/FAQ.html" class="footer-link">FAQ</a>
+            </li>
+
+            <li>
+              <a href="/terms-of-service.html" class="footer-link"
+                >Terms of Service</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="container">
+          <p class="copyright">
+            &copy; 2025, JudeX Technologies. All Rights Reserved.
+          </p>
+
+          <ul class="social-list">
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-twitter"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-instagram"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-linkedin"></ion-icon>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+    <!-- 
+  - custom js link
+-->
+    <script type="module" src="/assets/js/auth.js" defer></script>
+    <script src="./assets/js/script.js" defer></script>
+
+    <!-- 
+  - wallet js link
+-->
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.86.2/lib/index.iife.min.js"></script>
+    <script type="module" src="./assets/js/wallet.js" defer></script>
+
+    <!-- 
+  - util js link
+-->
+    <script type="module" src="./assets/js/util.js" defer></script>
+
+    <!-- 
+  - buyCrypto js link
+-->
+    <script type="module" src="./assets/js/buyCrypto.js" defer></script>
+
+    <!-- 
+  - sellCrypto js link
+-->
+    <script type="module" src="./assets/js/sellCrypto.js" defer></script>
+
+    <!-- 
+  - swapCrypto js link
+-->
+    <script type="module" src="./assets/js/swapCrypto.js" defer></script>
+
+    <!-- 
+  - ionicon link
+-->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+    <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
+    <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+    <script>
+      function showToast(message, type = "info", onClick = null) {
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `<span class="toast-message">${message}</span>`;
+
+        if (onClick) {
+          toast.style.cursor = "pointer";
+          toast.addEventListener("click", () => {
+            onClick();
+            toast.remove();
+          });
+        } else {
+          setTimeout(() => toast.classList.add("fade-out"), 4000);
+          setTimeout(() => toast.remove(), 4300);
+        }
+
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add("show"), 50);
+      }
+
+      // ------------- Buy --------------------------------------
+      const cryptoSelect = document.getElementById("cryptoSelect");
+      const fiatAmountInput = document.getElementById("fiatAmount");
+      const buyButton = document.getElementById("buyButton");
+      const fiatCurrencySelect = document.getElementById("fiatCurrency");
+
+      // ----------- Sell ----------------------------------------
+      const sellCryptoSelect = document.getElementById("sellCryptoSelect");
+      const cryptoAmountIn = document.getElementById("cryptoAmount");
+      const sellButton = document.getElementById("sellButton");
+      const sellFiatSelect = document.getElementById("sellFiatCurrency");
+
+      function getStoredToken() {
+        const raw = localStorage.getItem("authToken");
+        if (!raw) return null;
+        try {
+          return JSON.parse(raw).token;
+        } catch {
+          return null;
+        }
+      }
+
+      async function ensure2FA() {
+        const token = getStoredToken();
+        if (!token) {
+          showToast("Please log in first", "warning");
+          setTimeout(() => (window.location.href = "/"), 1200);
+          throw new Error("not-authenticated");
+        }
+
+        const resp = await fetch("/api/user/profile", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (resp.status === 401) {
+          showToast("Session expired, please log in again", "warning");
+          setTimeout(() => (window.location.href = "/"), 1200);
+          throw new Error("session-expired");
+        }
+        if (!resp.ok) {
+          throw new Error(`Unexpected error: ${resp.status}`);
+        }
+
+        const profile = await resp.json();
+        if (!profile.twoFAEnabled) {
+          showToast("Please enable 2FA first", "warning");
+          setTimeout(() => (window.location.href = "/enable-2fa.html"), 1200);
+          throw new Error("2fa-not-enabled");
+        }
+
+        return profile;
+      }
+
+      async function launchTransak(mode) {
+        // ------- Buy Value -----------------------------
+        const selectedCrypto = cryptoSelect.value.toUpperCase();
+        const fiatAmount = parseFloat(fiatAmountInput.value).toFixed(2);
+        const fiatCurrency = fiatCurrencySelect.value;
+        // ------- Sell Value-----------------------------
+        const sellCrypto = sellCryptoSelect.value.toUpperCase();
+        const cryptoAmount = parseFloat(cryptoAmountIn.value);
+        const sellFiatCurrency = sellFiatSelect.value;
+
+        const walletAddress = window.walletData?.address;
+
+        if (!walletAddress) {
+          if (mode === "BUY") {
+            buyButton.disabled = true;
+            buyButton.style.opacity = 0.5;
+            buyButton.style.cursor = "not-allowed";
+            return showToast("Please connect your wallet first.", "warning");
+          }
+          sellButton.disabled = true;
+          sellButton.style.opacity = 0.5;
+          sellButton.style.cursor = "not-allowed";
+          return showToast("Please connect your wallet first.", "warning");
+        }
+
+        let profile;
+        try {
+          profile = await ensure2FA();
+        } catch {
+          return;
+        }
+
+        const {
+          firstName,
+          lastName,
+          email,
+          mobileNumber,
+          dateOfBirth,
+          address: addr,
+        } = profile;
+
+        const userData = {
+          firstName,
+          lastName,
+          email,
+          mobileNumber,
+          dob: dateOfBirth.split("T")[0],
+          address: {
+            addressLine1: addr.addressLine1,
+            addressLine2: addr.addressLine2 || "",
+            city: addr.city,
+            state: addr.state,
+            postCode: addr.postalCode,
+            countryCode: addr.countryCode,
+          },
+        };
+
+        const opts = {
+          apiKey: "6b1d40eb-87e6-4d97-8c6a-d27afaa19f53",
+          environment: "STAGING", // or 'PRODUCTION'
+          defaultCryptoCurrency: mode === "BUY" ? selectedCrypto : sellCrypto,
+          walletAddress,
+          productsAvailed: mode,
+          hostURL: window.location.href,
+          themeColor: "000000",
+          exchangeScreenTitle:
+            mode === "BUY" ? "Buy Crypto with JudeX" : "Sell Crypto with JudeX",
+          hideMenu: true,
+          widgetWidth: "450px",
+          widgetHeight: "650px",
+          redirectURL: "",
+          userData,
+        };
+
+        if (mode === "BUY") {
+          if (isNaN(fiatAmount) || fiatAmount <= 0)
+            return showToast("Enter a valid fiat amount.", "warning");
+          opts.fiatAmount = fiatAmount;
+          opts.fiatCurrency = fiatCurrency;
+        } else {
+          if (isNaN(cryptoAmount) || cryptoAmount <= 0)
+            return showToast("Enter a valid crypto amount.", "warning");
+          opts.defaultCryptoAmount = cryptoAmount;
+          opts.fiatCurrency = sellFiatCurrency;
+        }
+
+        const transak = new TransakSDK.default(opts);
+        transak.init();
+
+        // This will trigger when the user closed the widget
+        transak.on(transak.EVENTS.TRANSAK_WIDGET_CLOSE, (orderData) => {
+          transak.close();
+        });
+
+        // This will trigger when the user marks payment is made
+        transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
+          showToast(
+            mode === "BUY"
+              ? "Your crypto purchase was successful! 🎉"
+              : "Your crypto sale was successful! 🎉",
+            "success"
+          );
+          transak.close();
+        });
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        const buyBtn = document.getElementById("buyButton");
+        const sellBtn = document.getElementById("sellButton");
+
+        buyBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          await ensure2FA();
+          launchTransak("BUY");
+        });
+
+        sellBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          await ensure2FA();
+          launchTransak("SELL");
+        });
+      });
+    </script>
+  </body>
+</html>

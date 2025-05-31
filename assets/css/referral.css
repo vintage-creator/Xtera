@@ -1,0 +1,119 @@
+/* referral.css */
+
+/* 1. Wrapper */
+.referral-container {
+    max-width: 700px;
+    margin: 100px auto;
+    padding: 3rem 2rem;
+    background: var(--white);
+    border-radius: 1rem;
+    box-shadow: 0 6px 20px var(--black_10);
+    text-align: center;
+    font-family: system-ui, sans-serif;
+  }
+  
+  /* 2. Title */
+  .referral-title {
+    font-size: clamp(2.5rem, 5vw, 3rem);
+    color: var(--blue-crayola);
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .referral-title::after {
+    content: '';
+    width: 4rem;
+    height: 4px;
+    background: var(--blue-crayola);
+    display: block;
+    margin: 0.5rem auto 0;
+    border-radius: 2px;
+  }
+  
+  /* 3. Illustration */
+  .referral-animation img {
+    width: 270px;
+    max-width: 100%;
+    margin: -1.5rem auto;
+    animation: floatY 3s ease-in-out infinite;
+  }
+  
+  /* 4. Intro text */
+  .referral-intro,
+  .referral-description {
+    color: var(--eerie-black-2);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  .referral-intro {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  .referral-description {
+    font-size: 1.5rem;
+    opacity: 0.85;
+  }
+  
+  /* 5. Emoji */
+  .referral-emoji {
+    font-size: 4.5rem;
+    margin: -2rem 0 1rem;
+    display: inline-block;
+    animation: popIn 0.5s ease forwards;
+  }
+  
+  /* 6. Button */
+  .referral-btn {
+    display: inline-block;
+    background: var(--blue-crayola);
+    color: var(--white);
+    padding: 0.85rem 2rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  .referral-btn:hover {
+    background: var(--blue-crayola-hover, #1e3fae);
+    transform: translateY(-2px);
+  }
+  
+  /* 7. Animations */
+  @keyframes floatY {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-8px); }
+  }
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.6); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  
+  /* 8. Responsive */
+  @media (max-width: 600px) {
+    .referral-container {
+      margin: 120px 1rem;
+      padding: 2rem 1rem;
+    }
+    .referral-title {
+      font-size: 2rem;
+    }
+    .referral-animation img {
+        width: 200px;
+      }
+    .referral-intro {
+      font-size: 1.2rem;
+    }
+    .referral-description {
+      font-size: 1.1rem;
+    }
+    .referral-emoji {
+      font-size: 3.5rem;
+      margin: -1.5rem 0 1rem;
+    }
+    .referral-btn {
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+    }
+  }
+  

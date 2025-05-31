@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    http-equiv="refresh"
+    content="5;url=/login.html"
+  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email Confirmed</title>
+  <style>
+    /* Simple reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .container {
+      background: #fff;
+      max-width: 400px;
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 2rem;
+    }
+    .logo {
+      margin-bottom: 1.5rem;
+    }
+    .logo img {
+      width: 100px;
+      height: auto;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 1.75rem;
+      color: #005eff;
+    }
+    p {
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      background-color: #005eff;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.2s ease;
+    }
+    .btn:hover {
+      background-color: #0041bb;
+    }
+    .small {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="assets/images/logo.svg" alt="JudeX Logo" />
+    </div>
+    <h1>Email Confirmed!</h1>
+    <p>
+      Thank you for verifying your address. You’ll be redirected to the
+      Sign In page in a few seconds.
+    </p>
+    <a class="btn" href="/login.html">Go to Sign In Now</a>
+    <p class="small">
+      Can’t wait? Click the button above. Otherwise, sit tight—it’ll happen automatically.
+    </p>
+  </div>
+
+  <script>
+    // Fallback JavaScript redirect after 5 seconds
+    setTimeout(() => {
+      window.location.href = '/login.html';
+    }, 5000);
+  </script>
+</body>
+</html>
