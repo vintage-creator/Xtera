@@ -1,5 +1,5 @@
 {
-  "name": "judex",
+  "name": "Xtera",
   "version": "1.0.0",
   "description": "A cryptocurrency platform where you can buy, sell, and swap digital assets.",
   "main": "index.js",
@@ -13,7 +13,7 @@
     "live-server": "^1.2.2"
   },
   "dependencies": {
-    "@solana/web3.js": "^1.98.1",
+    "@solana/web3.js": "^1.98.2",
     "axios": "^1.8.4",
     "concurrently": "^9.1.2",
     "cors": "^2.8.5",
@@ -25,6 +25,7 @@
     "nodemailer": "^7.0.3",
     "qrcode": "^1.5.4",
     "speakeasy": "^2.0.0",
+    "tweetnacl": "^1.0.3",
     "web3modal": "^1.9.12",
     "xml2js": "^0.6.2"
   }

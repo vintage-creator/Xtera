@@ -1,6 +1,6 @@
-# JudeX
+# Xtera
 
-**JudeX** is a fast, secure, and easy-to-use cryptocurrency platform where you can **buy**, **sell**, and **swap** your favorite digital assets like **Bitcoin (BTC)** and **Ethereum (ETH)**. Powered by a sleek Progressive Web App (PWA) interface, JudeX works across devices — no app store downloads required.
+**Xtera** is a fast, secure, and easy-to-use cryptocurrency platform where you can **buy**, **sell**, and **swap** your favorite digital assets like **Bitcoin (BTC)** and **Ethereum (ETH)**. Powered by a sleek Progressive Web App (PWA) interface, Xtera works across devices — no app store downloads required.
 
 ---
 
@@ -10,7 +10,7 @@
   Seamlessly trade BTC, ETH, and more in just a few clicks.
 
 - 📱 **Progressive Web App (PWA)**  
-  Install JudeX directly from your browser for a native app experience — desktop and mobile supported.
+  Install Xtera directly from your browser for a native app experience — desktop and mobile supported.
 
 - ⚡ **Fast & Responsive Interface**  
   Lightning-fast navigation and real-time performance, optimized for all devices.
@@ -24,10 +24,10 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/vintage-creator/Judex.git
+git clone https://github.com/vintage-creator/Xtera.git
 
 # Navigate to the project directory
-cd Judex
+cd Xtera
 
 # Install dependencies
 yarn install

@@ -19,6 +19,8 @@ async function startServer() {
     app.use("/api", require("./routes/2fa"));
     app.use('/api/swap', require('./routes/swap'));
     app.use("/api/user", require("./routes/user"));
+    app.use("/api", require("./routes/solService"));
+    app.use("/api/wallet", require("./routes/wallet"));
 
     let tickersCache = null;
     let tickersCacheTime = 0;

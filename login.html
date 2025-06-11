@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JudeX — Sign In</title>
+    <title>Xtera — Sign In</title>
     <script
       async
       src="https://cdn.transak.com/js/sdk/1.4.1/transak.js"
@@ -40,9 +40,9 @@
             src="./assets/images/logo.svg"
             width="32"
             height="32"
-            alt="JudeX logo"
+            alt="Xtera logo"
           />
-          JudeX
+          Xtera
         </a>
 
         <nav class="navbar" data-navbar>
@@ -453,10 +453,16 @@
               </h2>
 
               <div class="wallet-buttons">
-                <button class="wallet-icon-btn connect-eth-btn" id="connect-eth">
+                <button
+                  class="wallet-icon-btn connect-eth-btn"
+                  id="connect-eth"
+                >
                   <img src="/assets/images/eth.png" alt="Ethereum" /> Ethereum
                 </button>
-                <button id="connect-sol" class="wallet-icon-btn connect-sol-btn">
+                <button
+                  id="connect-sol"
+                  class="wallet-icon-btn connect-sol-btn"
+                >
                   <img src="/assets/images/sol.jpg" alt="Solana" /> Solana
                 </button>
               </div>
@@ -479,9 +485,9 @@
     </header>
     ```
 
-    <main class="main-signin modal-box container" style="margin-top: 12rem;">
-      <h1>Sign In to JudeX</h1>
-    
+    <main class="main-signin modal-box container" style="margin-top: 12rem">
+      <h1>Sign In to Xtera</h1>
+
       <p class="intro">
         Don’t have an account?
         <a href="/create-account.html">Create Account</a>
@@ -489,18 +495,21 @@
 
       <div class="wallet-connect">
         <button id="connect-eth" class="wallet-icon-btn connect-eth-btn">
-          <img src="/assets/images/ethereum-eth-logo.png" alt="Ethereum" />Connect Eth Wallet
+          <img
+            src="/assets/images/ethereum-eth-logo.png"
+            alt="Ethereum"
+          />Connect Eth Wallet
         </button>
         <button id="connect-sol" class="wallet-icon-btn connect-sol-btn">
-          <img src="/assets/images/solana-sol-logo.png" alt="Solana"/>Connect Sol Wallet
+          <img src="/assets/images/solana-sol-logo.png" alt="Solana" />Connect
+          Sol Wallet
         </button>
       </div>
-    
+
       <p class="note">
         After connecting, you’ll be asked to sign a message to authenticate.
       </p>
     </main>
-    
 
     <footer class="footer">
       <div class="footer-top" data-section>
@@ -511,9 +520,9 @@
                 src="./assets/images/logo.svg"
                 width="50"
                 height="50"
-                alt="JudeX logo"
+                alt="Xtera logo"
               />
-              JudeX
+              Xtera
             </a>
 
             <h2 class="footer-title"></h2>
@@ -523,7 +532,7 @@
             >
 
             <a href="mailto:hello.cryptex@gmail.com" class="footer-contact-link"
-              >hello@judex.com</a
+              >hello@xtera.com</a
             >
 
             <address class="footer-contact-link">
@@ -612,7 +621,7 @@
       <div class="footer-bottom">
         <div class="container">
           <p class="copyright">
-            &copy; 2025, JudeX Technologies. All Rights Reserved.
+            &copy; 2025, Xtera Technologies. All Rights Reserved.
           </p>
 
           <ul class="social-list">
@@ -652,10 +661,6 @@
     <!-- 
   - wallet js link
 -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.86.2/lib/index.iife.min.js"></script> -->
-   <!-- Un-minified for debugging -->
-   <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.86.2/lib/index.iife.js" defer></script>
-
     <script type="module" src="./assets/js/wallet.js" defer></script>
 
     <!-- 
@@ -692,7 +697,6 @@
     <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
     <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
     <script>
       function showToast(message, type = "info", onClick = null) {
         const toast = document.createElement("div");
@@ -713,7 +717,6 @@
         document.body.appendChild(toast);
         setTimeout(() => toast.classList.add("show"), 50);
       }
-
 
       // ------------- Buy --------------------------------------
       const cryptoSelect = document.getElementById("cryptoSelect");
@@ -835,12 +838,12 @@
           hostURL: window.location.href,
           themeColor: "000000",
           exchangeScreenTitle:
-            mode === "BUY" ? "Buy Crypto with JudeX" : "Sell Crypto with JudeX",
+            mode === "BUY" ? "Buy Crypto with Xtera" : "Sell Crypto with Xtera",
           hideMenu: true,
           widgetWidth: "450px",
           widgetHeight: "650px",
           redirectURL: "",
-          userData
+          userData,
         };
 
         if (mode === "BUY") {

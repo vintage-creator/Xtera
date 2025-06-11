@@ -1,7 +1,7 @@
 {
-  "name": "JudeX",
-  "short_name": "JudeX",
-  "description": "Buy & Sell Digital Assets on JudeX",
+  "name": "Xtera",
+  "short_name": "Xtera",
+  "description": "Buy & Sell Digital Assets on Xtera",
   "start_url": "./index.html",
   "display": "standalone",
   "scope": "/",

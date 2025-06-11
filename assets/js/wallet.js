@@ -1,7 +1,7 @@
 import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.esm.min.js";
-import { getValidAuthToken } from "./auth.js"
+import { getValidAuthToken } from "./auth.js";
 import { showToast } from "./util.js";
-import { restoreWalletDataOnDashboard } from "./dashboard.js"
+import { restoreWalletDataOnDashboard } from "./dashboard.js";
 const INFURA_KEY = "a770b1df902d41ada583c9ec87cb133c";
 
 const walletModal = document.getElementById("wallet-modal");
@@ -18,7 +18,7 @@ window.walletData = {
 const CACHE_KEY = "walletData";
 const CACHE_TTL = 60 * 60 * 1000;
 
- async function ensureRegistered(address) {
+async function ensureRegistered(address) {
   const token = getValidAuthToken();
   // If we have a token, use the protected endpoint:
   let url = "/api/status";
@@ -59,7 +59,7 @@ async function walletLogin(address, signature, chain = "ETH", personId = null) {
   const payload =
     chain === "SOL" ? { address, signature, chain } : { address, signature };
 
-    if (personId) payload.personId = personId;
+  if (personId) payload.personId = personId;
 
   // Call your login API
   const resp = await fetch("/api/login", {
@@ -81,15 +81,22 @@ async function walletLogin(address, signature, chain = "ETH", personId = null) {
 
   const expiresAt = Date.now() + 60 * 60 * 1000;
   localStorage.setItem("authToken", JSON.stringify({ token, expiresAt }));
+  const [, payloadB64] = token.split(".");
+  const TokenPayload = JSON.parse(atob(payloadB64));
+  if (TokenPayload.personId) {
+    localStorage.setItem("personId", TokenPayload.personId);
+  }
   showToast("✅ Logged in!");
 
   window.location.href = "/enable-2fa.html";
 }
 
-
 // — Helpers for caching & restoring —
 export function cacheWalletData(data) {
-  localStorage.setItem(CACHE_KEY, JSON.stringify({ ...data, connectedAt: Date.now() }));
+  localStorage.setItem(
+    CACHE_KEY,
+    JSON.stringify({ ...data, connectedAt: Date.now() })
+  );
 }
 
 function restoreFromCache() {
@@ -112,7 +119,7 @@ function restoreFromCache() {
 
 // — UI helper to show address & balance —
 export function updateWalletUI({ address, balance, cryptoType }) {
-  const walletInfo    = document.getElementById("wallet-info");
+  const walletInfo = document.getElementById("wallet-info");
   const walletAddress = document.getElementById("wallet-address");
   const walletBalance = document.getElementById("wallet-balance");
   const walletHeading = document.querySelector("#wallet-modal h3");
@@ -120,14 +127,16 @@ export function updateWalletUI({ address, balance, cryptoType }) {
   if (!walletAddress || !walletBalance || !walletHeading) return;
 
   const short = address
-    ? address.slice(0,6) + "…" + address.slice(-6)
+    ? address.slice(0, 6) + "…" + address.slice(-6)
     : "Not connected";
 
   walletHeading.textContent = address
-    ? cryptoType === "ETH" ? "Ethereum Connected" : "Solana Connected"
+    ? cryptoType === "ETH"
+      ? "Ethereum Connected"
+      : "Solana Connected"
     : "Connect Your Wallet";
 
-    walletAddress.innerHTML = `
+  walletAddress.innerHTML = `
     <span style="display: flex; align-items: center; gap: 8px;">
       <span style="color: rgb(48, 47, 47);">Wallet Address:</span>
       <span id="short-address" style="font-weight: 500;">${short}</span>
@@ -140,7 +149,9 @@ export function updateWalletUI({ address, balance, cryptoType }) {
   walletBalance.innerHTML = `
       <span style="display:flex;align-items:center;gap:8px;">
         <span style="color: rgb(48, 47, 47);">Balance:</span>
-        <span style="font-weight:500;">${balance || 0} ${cryptoType||""}</span>
+        <span style="font-weight:500;">${balance || 0} ${
+    cryptoType || ""
+  }</span>
       </span>
     `;
   walletInfo && (walletInfo.style.display = address ? "block" : "none");
@@ -149,7 +160,8 @@ export function updateWalletUI({ address, balance, cryptoType }) {
   const copyBtn = document.getElementById("copy-address-btn");
   if (copyBtn && address) {
     copyBtn.onclick = () =>
-      navigator.clipboard.writeText(address)
+      navigator.clipboard
+        .writeText(address)
         .then(() => showToast("Address copied!", "success"))
         .catch(() => showToast("Copy failed", "error"));
   }
@@ -173,9 +185,10 @@ export async function refreshBalance() {
       const bn = await provider.getBalance(wd.address);
       wd.balance = ethers.utils.formatEther(bn);
     } else {
-      const conn     = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
-      const lamports = await conn.getBalance(new solanaWeb3.PublicKey(wd.address));
-      wd.balance    = (lamports / 1e9).toFixed(4);
+      const resp = await fetch(`/api/solana/balance/${wd.address}`);
+      if (!resp.ok) throw new Error("Balance fetch failed");
+      const { balance } = await resp.json();
+      wd.balance = Number(balance).toFixed(4);
     }
     cacheWalletData(wd);
     updateWalletUI(wd);
@@ -199,13 +212,26 @@ export function openWalletModal() {
 export async function connectEthWallet(e) {
   if (e?.preventDefault) e.preventDefault();
 
+  let evmProvider = null;
+  if (window.ethereum) {
+    const all = Array.isArray(window.ethereum.providers)
+      ? window.ethereum.providers
+      : [window.ethereum];
+
+    // Try non‑Phantom first (e.g. MetaMask), otherwise pick first injected
+    evmProvider = all.find(p => !p.isPhantom) || all[0];
+  }
+
   let provider;
   try {
-    if (window.ethereum) {
-      provider = new ethers.providers.Web3Provider(window.ethereum);
+    if (evmProvider) {
+      provider = new ethers.providers.Web3Provider(evmProvider);
       await provider.send("eth_requestAccounts", []);
     } else {
-      const wc = new WalletConnectProvider({ rpc: { 1: `https://mainnet.infura.io/v3/${INFURA_KEY}` }, qrcode: true });
+      const wc = new WalletConnectProvider({
+        rpc: { 1: `https://mainnet.infura.io/v3/${INFURA_KEY}` },
+        qrcode: true,
+      });
       await wc.enable();
       provider = new ethers.providers.Web3Provider(wc);
     }
@@ -213,31 +239,57 @@ export async function connectEthWallet(e) {
     return showToast("No Ethereum wallet found", "error");
   }
 
-  const signer  = provider.getSigner();
+  const signer = provider.getSigner();
   const address = (await signer.getAddress()).toLowerCase();
-  const personId     = localStorage.getItem("personId");
-  const hasJWT       = Boolean(getValidAuthToken());
-  const justRegister = personId && !hasJWT;
-  if (!justRegister && !(await ensureRegistered(address))) return;
+  const token = getValidAuthToken();
+  const personId = localStorage.getItem("personId");
+  const isFirstLink = Boolean(personId) && !token;
+  if (!token && !isFirstLink && !(await ensureRegistered(address))) return;
 
-  const balWei  = await provider.getBalance(address);
+  const balWei = await provider.getBalance(address);
   const balance = ethers.utils.formatEther(balWei);
 
-  const data = { connectedWallet: "eth", address, balance, cryptoType: "ETH" };
-  window.walletData = data;
-  cacheWalletData(data);
-  updateWalletUI(data);
+  // update UI and cache
+  window.walletData = {
+    connectedWallet: "eth",
+    address,
+    balance,
+    cryptoType: "ETH",
+  };
+  cacheWalletData(window.walletData);
+  updateWalletUI(window.walletData);
   showToast("✅ ETH connected", "success");
 
-  // login & redirect
-  const token = getValidAuthToken();
-  if (!token) {
-    const { message } = await (await fetch(`/api/nonce/${address}`)).json();
-    const sig = await signer.signMessage(message);
-    await walletLogin(address, sig, "ETH", personId);
-    window.location.href = "/enable-2fa.html";
+  // fetch a fresh nonce for this wallet
+  const { message: nonce } = await (
+    await fetch(`/api/nonce/${address}`)
+  ).json();
+  const sig = await signer.signMessage(nonce);
+
+  if (token) {
+    // LINK flow
+    const res = await fetch("/api/wallet/link", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        address,
+        signature: sig,
+        chain: "ETH",
+        message: nonce,
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      return showToast(err.error || "Failed to link wallet", "error");
+    }
+    showToast("🔗 Ethereum wallet linked!", "success");
   } else {
-    window.location.href = "/dashboard.html";
+    // LOGIN / SIGNUP flow
+    await walletLogin(address, sig, "ETH", personId);
+    // walletLogin itself redirects to enable-2fa.html
   }
 }
 
@@ -249,40 +301,82 @@ export async function connectSolWallet(e) {
     return;
   }
 
-  const resp    = await window.solana.connect();
-  const address = resp.publicKey.toString().toLowerCase();
-  const personId     = localStorage.getItem("personId");
-  const hasJWT       = Boolean(getValidAuthToken());
-  const justRegister = personId && !hasJWT;
-  if (!justRegister && !(await ensureRegistered(address))) return;
+  const resp = await window.solana.connect();
+  const address = resp.publicKey.toString();
+  const token = getValidAuthToken();
+  const personId = localStorage.getItem("personId");
+  const isFirstLink = Boolean(personId) && !token;
+  if (!token && !isFirstLink && !(await ensureRegistered(address))) return;
 
-  const conn     = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
-  const lamports = await conn.getBalance(resp.publicKey);
-  const balance  = (lamports / 1e9).toFixed(4);
+  // fetch SOL balance via your server proxy
+  const balResp = await fetch(`/api/solana/balance/${address}`);
+  if (!balResp.ok) throw new Error("Balance fetch failed");
+  const { balance } = await balResp.json();
 
-  const data = { connectedWallet: "sol", address, balance, cryptoType: "SOL" };
-  window.walletData = data;
-  cacheWalletData(data);
-  updateWalletUI(data);
+  // update UI and cache
+  window.walletData = {
+    connectedWallet: "sol",
+    address,
+    balance: Number(balance).toFixed(4),
+    cryptoType: "SOL",
+  };
+  cacheWalletData(window.walletData);
+  updateWalletUI(window.walletData);
   showToast("✅ SOL connected", "success");
 
-  // login & redirect
-  const { message } = await (await fetch(`/api/nonce/${address}`)).json();
-  const encoded     = new TextEncoder().encode(message);
-  const signed      = await window.solana.signMessage(encoded, "utf8");
-  const signature   = Buffer.from(signed.signature).toString("base64");
+  // fetch a fresh nonce for this wallet
+  const { message: nonce } = await (
+    await fetch(`/api/nonce/${address}`)
+  ).json();
+  const encoded = new TextEncoder().encode(nonce);
+  const { signature: sigBytes } = await window.solana.signMessage(
+    encoded,
+    "utf8"
+  );
+  const signature = btoa(String.fromCharCode(...new Uint8Array(sigBytes)));
 
-  await walletLogin(address, signature, "SOL", personId);
-  window.location.href = "/enable-2fa.html";
+  if (token) {
+    // LINK flow
+    const res = await fetch("/api/wallet/link", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        address,
+        signature,
+        chain: "SOL",
+        message: nonce,
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      return showToast(err.error || "Failed to link wallet", "error");
+    }
+    showToast("🔗 Solana wallet linked!", "success");
+  } else {
+    // LOGIN / SIGNUP flow
+    await walletLogin(address, signature, "SOL", personId);
+    // walletLogin itself redirects to enable-2fa.html
+  }
 }
 
 // — Disconnect wallet —
 export function disconnectWallet() {
-  if (window.walletData?.connectedWallet === "sol" && window.solana.isConnected) {
+  if (
+    window.walletData?.connectedWallet === "sol" &&
+    window.solana.isConnected
+  ) {
     window.solana.disconnect();
   }
   localStorage.removeItem(CACHE_KEY);
-  window.walletData = { connectedWallet: null, address: null, balance: null, cryptoType: null };
+  window.walletData = {
+    connectedWallet: null,
+    address: null,
+    balance: null,
+    cryptoType: null,
+  };
   updateWalletUI(window.walletData);
   showToast("🔌 Wallet disconnected", "info");
 }
@@ -290,9 +384,9 @@ export function disconnectWallet() {
 // — DOM wiring & modal logic —————————
 document.addEventListener("DOMContentLoaded", () => {
   restoreWalletDataOnDashboard();
-  
+
   // connection buttons & disconnect
-  const closeBtn    = document.getElementById("close-btn");
+  const closeBtn = document.getElementById("close-btn");
   const ethBtn = document.getElementById("connect-eth");
   const solBtn = document.getElementById("connect-sol");
   const connectEthButtons = document.querySelectorAll(".connect-eth-btn");
@@ -311,7 +405,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (closeBtn && walletModal) {
-    closeBtn.addEventListener("click", () => (walletModal.style.display = "none"));
+    closeBtn.addEventListener(
+      "click",
+      () => (walletModal.style.display = "none")
+    );
     window.addEventListener("click", (e) => {
       if (e.target === walletModal) walletModal.style.display = "none";
     });
@@ -320,7 +417,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // wire connect/disconnect
   if (ethBtn) ethBtn.addEventListener("click", connectEthWallet);
   if (solBtn) solBtn.addEventListener("click", connectSolWallet);
-  if (connectEthButtons) connectEthButtons.forEach(btn => btn.addEventListener("click", connectEthWallet));
-  if (connectSolButtons) connectSolButtons.forEach(btn => btn.addEventListener("click", connectSolWallet));
+  if (connectEthButtons)
+    connectEthButtons.forEach((btn) =>
+      btn.addEventListener("click", connectEthWallet)
+    );
+  if (connectSolButtons)
+    connectSolButtons.forEach((btn) =>
+      btn.addEventListener("click", connectSolWallet)
+    );
   if (disBtn) disBtn.addEventListener("click", disconnectWallet);
 });

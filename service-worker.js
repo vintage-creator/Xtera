@@ -1,4 +1,4 @@
-const CACHE_NAME = "judex-cache-v4";
+const CACHE_NAME = "Xtera-cache-v4";
 const urlsToCache = [
   "./",
   "./index.html",

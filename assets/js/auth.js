@@ -77,7 +77,8 @@ export async function fetchWithAuth(input, init = {}) {
     const didRefresh = await silentReLogin();
     if (!didRefresh) {
       // Cannot refresh → force-logout
-      localStorage.clear();
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("walletData");
       window.location.href = "/";
       return new Response(null, { status: 401 });
     }
@@ -95,10 +96,10 @@ export async function fetchWithAuth(input, init = {}) {
 
   // 4) If we get a 401, decide whether to auto-refresh or let it bubble up
   if (res.status === 401) {
-    // If this is *the verify-2fa endpoint*, do NOT auto-logout. 
+    // If this is *the verify-2fa endpoint*, do NOT auto-logout.
     // Instead, just return the 401 to the caller so they can show a toast.
     if (input.endsWith("/api/2fa/verify")) {
-      return res; 
+      return res;
     }
 
     // Otherwise, try silentReLogin one more time:
@@ -119,7 +120,8 @@ export async function fetchWithAuth(input, init = {}) {
 
     // If it is still a 401 (and not verify-2fa), then logout:
     if (res.status === 401 && !input.endsWith("/api/2fa/verify")) {
-      localStorage.clear();
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("walletData");
       window.location.href = "/";
     }
   }
@@ -127,16 +129,15 @@ export async function fetchWithAuth(input, init = {}) {
   return res;
 }
 
-
 // ————————————————————————————————————————————————————————————
 // 3) DOM logic
 document.addEventListener("DOMContentLoaded", () => {
-  // Do NOT capture token once here for later use; 
+  // Do NOT capture token once here for later use;
   // instead, always call getValidAuthToken() or fetchWithAuth() when needed.
   const walletBtn = document.getElementById("wallet-btn");
   if (!walletBtn) return;
 
-  // Style the button as Sign In vs Dashboard
+  // Style the button as Sign Up vs Dashboard
   if (getValidAuthToken()) {
     walletBtn.textContent = "Dashboard";
     walletBtn.classList.replace("btn-outline", "btn-primary");
@@ -169,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (resp.status === 400) {
           return openWalletModal();
         } else {
-          return (window.location.href = "/create-account.html");
+          return (window.location.href = "/login.html");
         }
       }
 
@@ -190,8 +191,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // — Signup form handler —
   const signupForm = document.getElementById("signupForm");
-  const nextBtn    = document.getElementById("nextBtn");
-  const prevBtn    = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const prevBtn = document.getElementById("prevBtn");
 
   if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
@@ -281,8 +282,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 2c) Wire up the Verify button **also via fetchWithAuth**:
     const verifyBtn = document.getElementById("verify-2fa-btn");
-    const inputEl   = document.getElementById("2fa-code");
-    const statusEl  = document.getElementById("statusMsg");
+    const inputEl = document.getElementById("2fa-code");
+    const statusEl = document.getElementById("statusMsg");
 
     if (verifyBtn && inputEl && statusEl) {
       verifyBtn.addEventListener("click", async () => {

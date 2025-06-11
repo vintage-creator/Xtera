@@ -14,7 +14,7 @@ const requireAuth = require("../middleware/requireAuth");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 function makeLabel(addr) {
-  return addr.slice(0, 6) + "…" + addr.slice(-4);
+  return `${addr.slice(0, 6)}-${addr.slice(-4)}`;
 }
 
 function tryDecodeToken(req) {
@@ -47,14 +47,19 @@ router.get("/nonce/:address", async (req, res) => {
 // 2) POST /api/login
 router.post("/login", async (req, res) => {
   try {
-    let { address: rawAddress, signature, personId } = req.body;
+    let { address: rawAddress, signature, chain, personId } = req.body;
     if (!rawAddress || !signature) {
       return res.status(400).json({ error: "Missing address or signature" });
     }
-    const address = rawAddress.toLowerCase();
+    const address = chain === "SOL" ? rawAddress : rawAddress.toLowerCase();
 
     // 1) Find the one User document that MUST exist (because /api/nonce/:address ran first)
     let user = await User.findOne({ walletAddress: address });
+
+    if (!user && personId) {
+      // This is the first time this wallet is seen for that person
+      user = await User.create({ walletAddress: address, person: personId });
+    }
 
     // If no user found, it means /api/nonce/:address was not called, so bail:
     if (!user) {
@@ -71,11 +76,27 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Nonce expired—retry login." });
     }
 
-    const signer = verifyMessage(user.nonce, signature);
-    if (signer.toLowerCase() !== address) {
-      return res.status(401).json({ error: "Signature mismatch" });
-    }
+    if (req.body.chain === "SOL") {
+      // Solana login: Ed25519 verify
+      const { PublicKey } = require("@solana/web3.js");
+      const nacl = require("tweetnacl");
 
+      // message is your nonce string, signature is base64
+      const msgBytes = Buffer.from(user.nonce, "utf8");
+      const sigBytes = Buffer.from(signature, "base64");
+      const pubkeyBytes = new PublicKey(address).toBytes();
+
+      const valid = nacl.sign.detached.verify(msgBytes, sigBytes, pubkeyBytes);
+      if (!valid) {
+        return res.status(401).json({ error: "Signature mismatch" });
+      }
+    } else {
+      // Ethereum login: ECDSA verify
+      const signer = verifyMessage(user.nonce, signature);
+      if (signer.toLowerCase() !== address) {
+        return res.status(401).json({ error: "Signature mismatch" });
+      }
+    }
     // 3) Clear the nonce fields so they can’t be reused
     user.nonce = null;
     user.nonceExpiresAt = null;
@@ -104,7 +125,7 @@ router.post("/login", async (req, res) => {
     }
 
     // 8) Now issue a JWT
-    const token = jwt.sign({ address }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ address, personId: fullUser.person._id.toString() }, JWT_SECRET, { expiresIn: "1h" });
 
     // 9) Decide whether this was first‐time link or just login
     const firstTimeLink = Boolean(personId);
@@ -131,7 +152,6 @@ router.post("/2fa/setup", requireAuth, async (req, res) => {
       (await User.findOne({ walletAddress: addr })) ||
       new User({ walletAddress: addr });
 
-    // decide on a label once
     const label = user.otpLabel || makeLabel(addr);
 
     let otpauthUrl;
@@ -139,7 +159,7 @@ router.post("/2fa/setup", requireAuth, async (req, res) => {
       // FIRST TIME: generate & persist both secret & label
       const secret = speakeasy.generateSecret({
         name: label,
-        issuer: "JudeX",
+        issuer: "Xtera",
         algorithm: "sha1",
         digits: 6,
         period: 30,
@@ -147,13 +167,14 @@ router.post("/2fa/setup", requireAuth, async (req, res) => {
       user.otpSecret = secret.base32;
       user.otpLabel = label;
       await user.save();
+
       otpauthUrl = secret.otpauth_url;
     } else {
       // REUSE existing secret & label
       otpauthUrl = speakeasy.otpauthURL({
         secret: user.otpSecret,
         label,
-        issuer: "JudeX",
+        issuer: "Xtera",
         algorithm: "sha1",
         digits: 6,
         period: 30,
@@ -291,11 +312,11 @@ router.post("/register", async (req, res) => {
       <div style="text-align:center; margin-bottom:2rem; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
         <img
           src="https://res.cloudinary.com/dcoxo8snb/image/upload/v1747615055/logo-512_yvvclj.png"
-          alt="JudeX Logo"
+          alt="Xtera Logo"
           width="48"
           style="display:block;"
         />
-        <h1 style="margin:0; font-size:1.5rem; color:#005eff;">JudeX</h1>
+        <h1 style="margin:0; font-size:1.5rem; color:#005eff;">Xtera</h1>
       </div>
 
       <p style="font-size:1rem; line-height:1.5;">
@@ -303,7 +324,7 @@ router.post("/register", async (req, res) => {
       </p>
 
       <p style="font-size:1rem; line-height:1.5;">
-        Thanks for registering with JudeX! Please click the button below to confirm your email address and complete your account setup.
+        Thanks for registering with Xtera! Please click the button below to confirm your email address and complete your account setup.
       </p>
 
       <div style="text-align:center; margin:2rem 0;">
@@ -337,7 +358,7 @@ router.post("/register", async (req, res) => {
 
     await mailer.sendMail({
       to: personDoc.email,
-      from: '"JudeX" <judexchange@zohomail.com>',
+      from: '"Xtera" <judexchange@zohomail.com>',
       subject: "Please confirm your email",
       html: emailHtml,
     });
