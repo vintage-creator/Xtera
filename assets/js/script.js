@@ -121,9 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
           <td class="table-data">
             <canvas id="${canvasId}" width="100" height="40"></canvas>
           </td>
-          <td class="table-data">
-            <button class="btn btn-outline">Trade</button>
-          </td>
         `;
         tbody.appendChild(tr);
   
