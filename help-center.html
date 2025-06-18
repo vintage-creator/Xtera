@@ -792,6 +792,7 @@
         if (!token) {
           showToast("Please log in first", "warning");
           setTimeout(() => (window.location.href = "/"), 1200);
+          window.location.href = "/login.html";
           throw new Error("not-authenticated");
         }
 
