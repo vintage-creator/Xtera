@@ -285,7 +285,6 @@ router.post("/register", async (req, res) => {
     await User.create(
       [
         {
-          walletAddress: null,
           person: personDoc._id,
         },
       ],

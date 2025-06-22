@@ -20,6 +20,7 @@ const CACHE_TTL = 60 * 60 * 1000;
 
 async function ensureRegistered(address) {
   const token = getValidAuthToken();
+  const personId = localStorage.getItem("personId"); 
   // If we have a token, use the protected endpoint:
   let url = "/api/status";
   let headers = {};
@@ -40,14 +41,22 @@ async function ensureRegistered(address) {
   }
 
   const { registered, message } = await resp.json();
+  if (message === "Email not verified") {
+    showToast("Please verify your e-mail first.", "warning");
+    return false;
+  }
+
+  // 3) If they *are* email-verified but *haven’t* linked a wallet yet:
   if (!registered) {
-    showToast(
-      message === "Email not verified"
-        ? "Please verify your email first."
-        : "Please create an account first.",
-      "warning",
-      () => (window.location.href = "/create-account.html")
-    );
+    // If they just came from registration (we have a personId, no JWT),
+    // that's *first-link*—let them proceed:
+    if (personId && !token) {
+      return true;
+    }
+    // Otherwise, force them to create an account (i.e. link that first wallet)
+    showToast("Please create an account first.", "warning", () => {
+      window.location.href = "/create-account.html";
+    });
     return false;
   }
 
@@ -219,7 +228,7 @@ export async function connectEthWallet(e) {
       : [window.ethereum];
 
     // Try non‑Phantom first (e.g. MetaMask), otherwise pick first injected
-    evmProvider = all.find(p => !p.isPhantom) || all[0];
+    evmProvider = all.find((p) => !p.isPhantom) || all[0];
   }
 
   let provider;
@@ -241,10 +250,12 @@ export async function connectEthWallet(e) {
 
   const signer = provider.getSigner();
   const address = (await signer.getAddress()).toLowerCase();
+  if (!(await ensureRegistered(address))) return;
+  
   const token = getValidAuthToken();
   const personId = localStorage.getItem("personId");
-  const isFirstLink = Boolean(personId) && !token;
-  if (!token && !isFirstLink && !(await ensureRegistered(address))) return;
+  // const isFirstLink = Boolean(personId) && !token;
+  // if (!token && !isFirstLink) return;
 
   const balWei = await provider.getBalance(address);
   const balance = ethers.utils.formatEther(balWei);
@@ -303,10 +314,12 @@ export async function connectSolWallet(e) {
 
   const resp = await window.solana.connect();
   const address = resp.publicKey.toString();
+  if (!(await ensureRegistered(address))) return;
+
   const token = getValidAuthToken();
   const personId = localStorage.getItem("personId");
-  const isFirstLink = Boolean(personId) && !token;
-  if (!token && !isFirstLink && !(await ensureRegistered(address))) return;
+  // const isFirstLink = Boolean(personId) && !token;
+  // if (!token && !isFirstLink) return;
 
   // fetch SOL balance via your server proxy
   const balResp = await fetch(`/api/solana/balance/${address}`);

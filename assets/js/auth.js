@@ -199,6 +199,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const formData = new FormData(signupForm);
       const data = Object.fromEntries(formData.entries());
+      console.log("📦 Submitted signup payload:", data);
+
 
       try {
         const resp = await fetch("/api/register", {
