@@ -8,7 +8,7 @@ export function getStoredAuthTokenInfo() {
   const raw = localStorage.getItem("authToken");
   if (!raw) return null;
   try {
-    return JSON.parse(raw); // { token, expiresAt }
+    return JSON.parse(raw);
   } catch {
     localStorage.clear();
     return null;
@@ -35,9 +35,17 @@ async function silentReLogin() {
     if (!address) return false;
 
     // 1a) GET a fresh nonce
-    const nonceRes = await fetch(`/api/nonce/${address}`);
+    const personId = localStorage.getItem("personId");
+    const url = personId
+      ? `/api/nonce/${address}?personId=${personId}`
+      : `/api/nonce/${address}`;
+    const nonceRes = await fetch(url);
     if (!nonceRes.ok) throw new Error("Failed to fetch nonce");
     const { message: nonce } = await nonceRes.json();
+    if (!nonce) {
+      console.error("No nonce returned");
+      return false;
+    }
 
     // 1b) Ask the connected wallet to sign it
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -83,6 +91,63 @@ export async function fetchWithAuth(input, init = {}) {
       return new Response(null, { status: 401 });
     }
   }
+
+
+  // // ------------- Buy --------------------------------------
+  // const cryptoSelect = document.getElementById("cryptoSelect");
+  // const fiatAmountInput = document.getElementById("fiatAmount");
+  // const buyButton = document.getElementById("buyButton");
+  // const fiatCurrencySelect = document.getElementById("fiatCurrency");
+
+  // // ----------- Sell ----------------------------------------
+  // const sellCryptoSelect = document.getElementById("sellCryptoSelect");
+  // const cryptoAmountIn = document.getElementById("cryptoAmount");
+  // const sellButton = document.getElementById("sellButton");
+  // const sellFiatSelect = document.getElementById("sellFiatCurrency");
+
+  // function getStoredToken() {
+  //   const raw = localStorage.getItem("authToken");
+  //   if (!raw) return null;
+  //   try {
+  //     return JSON.parse(raw).token;
+  //   } catch {
+  //     return null;
+  //   }
+  // }
+
+  // async function ensure2FA() {
+  //   const token = getStoredToken();
+  //   if (!token) {
+  //     showToast("Please log in first", "warning");
+  //     setTimeout(() => (window.location.href = "/"), 1200);
+  //     window.location.href = "/login.html";
+  //     throw new Error("not-authenticated");
+  //   }
+
+  //   const resp = await fetch("/api/user/profile", {
+  //     method: "GET",
+  //     headers: { Authorization: `Bearer ${token}` },
+  //   });
+
+  //   if (resp.status === 401) {
+  //     showToast("Session expired, please log in again", "warning");
+  //     setTimeout(() => (window.location.href = "/"), 1200);
+  //     throw new Error("session-expired");
+  //   }
+  //   if (!resp.ok) {
+  //     throw new Error(`Unexpected error: ${resp.status}`);
+  //   }
+
+  //   const profile = await resp.json();
+  //   if (!profile.twoFAEnabled) {
+  //     showToast("Please enable 2FA first", "warning");
+  //     setTimeout(() => (window.location.href = "/enable-2fa.html"), 1200);
+  //     throw new Error("2fa-not-enabled");
+  //   }
+
+  //   return profile;
+  // }
+
 
   // 2) Grab (fresh) token
   const rawToken = getValidAuthToken();
@@ -200,7 +265,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const formData = new FormData(signupForm);
       const data = Object.fromEntries(formData.entries());
       console.log("📦 Submitted signup payload:", data);
-
 
       try {
         const resp = await fetch("/api/register", {

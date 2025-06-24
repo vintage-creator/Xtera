@@ -8,59 +8,51 @@ const requireAuth = require("../middleware/requireAuth");
 const router = express.Router();
 
 router.post("/link", requireAuth, async (req, res) => {
-  // pull the signed message out of the POST body
   const { address: raw, signature, chain, message } = req.body;
-  const newAddr = chain === "SOL" ? raw : raw.toLowerCase();
-
-  // if no message, bail
-  if (typeof message !== "string") {
-    return res.status(400).json({ error: "Missing signed message" });
+  if (!raw || !signature || !chain || typeof message !== "string") {
+    return res.status(400).json({ error: "Missing parameters" });
   }
+  const address = chain === "SOL" ? raw : raw.toLowerCase();
 
-  // verify signature
-  if (chain === "SOL") {
-    // Solana: Ed25519 verify
-    const msgBytes = Buffer.from(message, "utf8");
-    const sigBytes = Buffer.from(signature, "base64");
-    const valid = nacl.sign.detached.verify(
-      msgBytes,
-      sigBytes,
-      new PublicKey(newAddr).toBytes()
-    );
-    if (!valid) {
-      return res.status(401).json({ error: "Signature mismatch" });
-    }
-  } else {
-    // Ethereum: ECDSA verify via ethers
-    let signer;
-    try {
-      signer = verifyMessage(message, signature);
-    } catch (e) {
-      return res.status(400).json({ error: "Invalid signature format" });
-    }
-    if (signer.toLowerCase() !== newAddr) {
-      return res.status(401).json({ error: "Signature mismatch" });
-    }
-  }
-
-  const currentUser = await User.findOne({ walletAddress: req.user.address });
-  if (!currentUser) {
-    return res
-      .status(500)
-      .json({ error: "Internal error: could not find your account." });
-  }
-
+  // 1) Verify signature:
   try {
-    const already = await User.findOne({ walletAddress: newAddr });
-    if (already) {
-      return res.json({ success: true });
+    if (chain === "SOL") {
+      const msgBytes = Buffer.from(message, "utf8");
+      const sigBytes = Buffer.from(signature, "base64");
+      const valid = nacl.sign.detached.verify(
+        msgBytes,
+        sigBytes,
+        new PublicKey(address).toBytes()
+      );
+      if (!valid) throw new Error("Signature mismatch");
+    } else {
+      const signer = verifyMessage(message, signature);
+      if (signer.toLowerCase() !== address) throw new Error("Signature mismatch");
     }
-    await User.create({ walletAddress: newAddr, person: currentUser.person });
+  } catch (err) {
+    return res.status(401).json({ error: err.message || "Invalid signature" });
+  }
+
+  // 2) Check for duplicate wallet (used by someone else)
+  const exists = await User.findOne({ walletAddress: address });
+  if (exists && exists.person.toString() !== req.user.person.toString()) {
+    return res.status(409).json({ error: "Wallet already linked to another account" });
+  }
+
+  // 3) Proceed to link if allowed
+  try {
+    await User.findOneAndUpdate(
+      { person: req.user.person, chain }, // filter
+      { walletAddress: address, person: req.user.person, chain },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
     return res.json({ success: true });
-  } catch (e) {
-    console.error("Link wallet error:", e);
+  } catch (err) {
+    console.error("Link wallet error:", err);
     return res.status(500).json({ error: "Failed to link wallet" });
   }
 });
+
+
 
 module.exports = router;

@@ -5,6 +5,7 @@ import { restoreWalletDataOnDashboard } from "./dashboard.js";
 const INFURA_KEY = "a770b1df902d41ada583c9ec87cb133c";
 
 const walletModal = document.getElementById("wallet-modal");
+const personId = localStorage.getItem("personId");
 
 // Global walletData
 window.walletData = {
@@ -20,7 +21,6 @@ const CACHE_TTL = 60 * 60 * 1000;
 
 async function ensureRegistered(address) {
   const token = getValidAuthToken();
-  const personId = localStorage.getItem("personId"); 
   // If we have a token, use the protected endpoint:
   let url = "/api/status";
   let headers = {};
@@ -64,29 +64,23 @@ async function ensureRegistered(address) {
 }
 
 async function walletLogin(address, signature, chain = "ETH", personId = null) {
-  // Build the request payload
-  const payload =
-    chain === "SOL" ? { address, signature, chain } : { address, signature };
-
+  // Always include chain in the payload
+  const payload = { address, signature, chain };
   if (personId) payload.personId = personId;
 
-  // Call your login API
   const resp = await fetch("/api/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
 
-  // Handle errors
   if (!resp.ok) {
     const errBody = await resp.json().catch(() => ({}));
     throw new Error(errBody.error || `Login failed (status ${resp.status})`);
   }
   const { token, message } = await resp.json();
 
-  if (message) {
-    showToast(message, "info");
-  }
+  if (message) showToast(message, "info");
 
   const expiresAt = Date.now() + 60 * 60 * 1000;
   localStorage.setItem("authToken", JSON.stringify({ token, expiresAt }));
@@ -96,9 +90,9 @@ async function walletLogin(address, signature, chain = "ETH", personId = null) {
     localStorage.setItem("personId", TokenPayload.personId);
   }
   showToast("✅ Logged in!");
-
   window.location.href = "/enable-2fa.html";
 }
+
 
 // — Helpers for caching & restoring —
 export function cacheWalletData(data) {
@@ -251,7 +245,7 @@ export async function connectEthWallet(e) {
   const signer = provider.getSigner();
   const address = (await signer.getAddress()).toLowerCase();
   if (!(await ensureRegistered(address))) return;
-  
+
   const token = getValidAuthToken();
   const personId = localStorage.getItem("personId");
   // const isFirstLink = Boolean(personId) && !token;
@@ -272,9 +266,26 @@ export async function connectEthWallet(e) {
   showToast("✅ ETH connected", "success");
 
   // fetch a fresh nonce for this wallet
-  const { message: nonce } = await (
-    await fetch(`/api/nonce/${address}`)
-  ).json();
+  const url = personId
+    ? `/api/nonce/${address}?personId=${personId}`
+    : `/api/nonce/${address}`;
+  const nonceResp = await fetch(url);
+
+  if (!nonceResp.ok) {
+    let errBody = {};
+    try {
+      errBody = await nonceResp.json();
+    } catch {}
+    return showToast(
+      errBody.error || errBody.message || "Cannot fetch nonce",
+      "error"
+    );
+  }
+  const { message: nonce } = await nonceResp.json();
+  if (!nonce) {
+    return showToast("No nonce returned—please try again.", "error");
+  }
+
   const sig = await signer.signMessage(nonce);
 
   if (token) {
@@ -338,9 +349,27 @@ export async function connectSolWallet(e) {
   showToast("✅ SOL connected", "success");
 
   // fetch a fresh nonce for this wallet
-  const { message: nonce } = await (
-    await fetch(`/api/nonce/${address}`)
-  ).json();
+  const url = personId
+    ? `/api/nonce/${address}?personId=${personId}`
+    : `/api/nonce/${address}`;
+  const nonceResp = await fetch(url);
+
+  if (!nonceResp.ok) {
+    let errBody = {};
+    try {
+      errBody = await nonceResp.json();
+    } catch {}
+    return showToast(
+      errBody.error || errBody.message || "Cannot fetch nonce",
+      "error"
+    );
+  }
+
+  const { message: nonce } = await nonceResp.json();
+  if (!nonce) {
+    return showToast("No nonce returned—please try again.", "error");
+  }
+
   const encoded = new TextEncoder().encode(nonce);
   const { signature: sigBytes } = await window.solana.signMessage(
     encoded,

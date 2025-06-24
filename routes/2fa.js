@@ -30,43 +30,101 @@ function tryDecodeToken(req) {
 // 1) GET /api/nonce/:address
 router.get("/nonce/:address", async (req, res) => {
   const address = req.params.address.toLowerCase();
-  const user =
-    (await User.findOne({ walletAddress: address })) ||
-    new User({ walletAddress: address });
+  const chain = address.startsWith("0x") ? "ETH" : "SOL";
+  const personId = req.query.personId;
 
-  // wrap the raw randomness in a clear‐text label
+  // 1) If personId is provided ➞ you’re doing a link/re-link
+  if (personId) {
+    const person = await Person.findById(personId);
+    if (!person) {
+      return res.status(404).json({ error: "Sign up first" });
+    }
+    if (!person.emailVerified) {
+      return res.status(403).json({ error: "Please verify your e-mail first" });
+    }
+    // Prevent stealing:
+    const conflict = await User.findOne({ walletAddress: address, chain });
+    if (conflict && conflict.person.toString() !== personId) {
+      return res.status(409).json({ error: "That wallet is already taken" });
+    }
+
+    // Find your dummy or existing chain link:
+    let user =
+      (await User.findOne({ person: personId, chain })) ||
+      (await User.findOne({ person: personId, chain: "DUMMY" }));
+
+    if (!user) {
+      user = await User.create({
+        person: personId,
+        walletAddress: address,
+        chain,
+      });
+    } else {
+      user.walletAddress = address;
+      user.chain = chain;
+    }
+    const raw = crypto.randomBytes(16).toString("hex");
+    user.nonce = `🔐 My App Login Nonce: ${raw}`;
+    user.nonceExpiresAt = Date.now() + 5 * 60 * 1000;
+    await user.save();
+    return res.json({ message: user.nonce });
+  }
+
+  // 2) Otherwise, **no personId** ➞ you’re doing a **login** with an already-linked wallet
+  // Find the exact wallet+chain:
+  const user = await User.findOne({ walletAddress: address, chain });
+  if (!user) {
+    return res
+      .status(404)
+      .json({ error: "Wallet not linked—please sign up or link first." });
+  }
+  // Generate & return nonce:
   const raw = crypto.randomBytes(16).toString("hex");
-  const message = `🔐 My App Login Nonce: ${raw}`;
-  user.nonce = message;
+  user.nonce = `🔐 My App Login Nonce: ${raw}`;
   user.nonceExpiresAt = Date.now() + 5 * 60 * 1000;
   await user.save();
-
-  res.json({ message });
+  return res.json({ message: user.nonce });
 });
 
 // 2) POST /api/login
 router.post("/login", async (req, res) => {
   try {
     let { address: rawAddress, signature, chain, personId } = req.body;
-    if (!rawAddress || !signature) {
-      return res.status(400).json({ error: "Missing address or signature" });
+    if (!rawAddress || !signature || !chain) {
+      return res
+        .status(400)
+        .json({ error: "Missing address, signature, or chain" });
     }
+
+    // Normalize address
     const address = chain === "SOL" ? rawAddress : rawAddress.toLowerCase();
 
-    // 1) Find the one User document that MUST exist (because /api/nonce/:address ran first)
-    let user = await User.findOne({ walletAddress: address });
+    // 1) Try finding the existing record by wallet+chain
+    let user = await User.findOne({ walletAddress: address, chain });
 
+    // 2) If none found but we have a personId, upsert that person's record for this chain
     if (!user && personId) {
-      // This is the first time this wallet is seen for that person
-      user = await User.create({ walletAddress: address, person: personId });
+      // Prevent linking someone else's wallet
+      const conflict = await User.findOne({ walletAddress: address, chain });
+      if (conflict) {
+        return res
+          .status(409)
+          .json({ error: "That wallet is already linked to another account." });
+      }
+
+      user = await User.findOneAndUpdate(
+        { person: personId, chain: "DUMMY" },
+        { walletAddress: address, person: personId, chain },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
     }
 
-    // If no user found, it means /api/nonce/:address was not called, so bail:
+    // Step 3: Fail if still no user
     if (!user) {
       return res.status(400).json({ error: "Please request a nonce first." });
     }
 
-    // 2) Validate that nonce & signature match
+    // Step 4: Validate nonce & signature
     if (!user.nonce || !user.nonceExpiresAt) {
       return res
         .status(400)
@@ -77,11 +135,9 @@ router.post("/login", async (req, res) => {
     }
 
     if (req.body.chain === "SOL") {
-      // Solana login: Ed25519 verify
       const { PublicKey } = require("@solana/web3.js");
       const nacl = require("tweetnacl");
 
-      // message is your nonce string, signature is base64
       const msgBytes = Buffer.from(user.nonce, "utf8");
       const sigBytes = Buffer.from(signature, "base64");
       const pubkeyBytes = new PublicKey(address).toBytes();
@@ -91,43 +147,41 @@ router.post("/login", async (req, res) => {
         return res.status(401).json({ error: "Signature mismatch" });
       }
     } else {
-      // Ethereum login: ECDSA verify
       const signer = verifyMessage(user.nonce, signature);
       if (signer.toLowerCase() !== address) {
         return res.status(401).json({ error: "Signature mismatch" });
       }
     }
-    // 3) Clear the nonce fields so they can’t be reused
+
+    // Step 5: Clear nonce
     user.nonce = null;
     user.nonceExpiresAt = null;
 
-    // 4) If this is the first time linking a Person, attach it now
-    if (!user.person && personId) {
-      user.person = personId;
-    }
-
-    // 5) SAVE the same User document you fetched in step 1:
+    // Step 6: Save user (whether newly assigned walletAddress or not)
     user = await user.save();
 
-    // 6) Populate the Person so we can check emailVerified & grab firstName
+    // Step 7: Fetch user with person details
     const fullUser = await User.findById(user._id).populate("person");
 
-    // 7) If still no Person linked, that means wallet is unregistered
     if (!fullUser.person) {
       return res
         .status(403)
         .json({ error: "Wallet not registered—please sign up first." });
     }
+
     if (!fullUser.person.emailVerified) {
       return res
         .status(403)
         .json({ error: "Email not verified. Check your inbox." });
     }
 
-    // 8) Now issue a JWT
-    const token = jwt.sign({ address, personId: fullUser.person._id.toString() }, JWT_SECRET, { expiresIn: "1h" });
+    // Step 8: Issue JWT
+    const token = jwt.sign(
+      { address, personId: fullUser.person._id.toString() },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
-    // 9) Decide whether this was first‐time link or just login
     const firstTimeLink = Boolean(personId);
     const message = firstTimeLink
       ? "✅ Wallet linked—welcome aboard!"
@@ -182,7 +236,7 @@ router.post("/2fa/setup", requireAuth, async (req, res) => {
     }
 
     const qrDataUrl = await QRCode.toDataURL(otpauthUrl);
-    return res.json({ qr: qrDataUrl });
+    return res.json({ qr: qrDataUrl, secret: user.otpSecret });
   } catch (err) {
     console.error("Error in /2fa/setup:", err);
     return res.status(500).json({ error: "Failed to generate 2FA QR code" });
@@ -286,6 +340,8 @@ router.post("/register", async (req, res) => {
       [
         {
           person: personDoc._id,
+          walletAddress: `xtera-${crypto.randomBytes(8).toString("hex")}`,
+          chain: "DUMMY",
         },
       ],
       { session }

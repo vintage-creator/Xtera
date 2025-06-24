@@ -101,6 +101,38 @@ label[for="2fa-code"] {
   color: #333;
   margin-top: 1rem;
 }
+#secret-container #copy-secret-btn {
+  display: inline-block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+#secret-container #copy-secret-btn {
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  border: 1px solid #0d6efd;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: #0d6efd;
+  cursor: pointer;
+}
+#secret-container #copy-secret-btn:hover {
+  background: #0d6efd;
+  color: white;
+}
+
+/* Make the readonly input look non-editable but selectable */
+#secret-container input[readonly] {
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  color: #333;
+  cursor: text;
+}
+#secret-container input[readonly]:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 
 /* --- Responsive tweaks --- */
 @media (max-width: 500px) {

@@ -494,12 +494,33 @@
       <div id="qr-container">
         <img id="qrImage" alt="2FA QR Code" />
       </div>
+
+      <div id="secret-container" style="display: none; margin: 1rem 0">
+        <label for="otp-secret">—or copy this key manually:</label>
+        <div style="display: flex; align-items: center; gap: 0.5rem">
+          <input
+            type="text"
+            id="otp-secret"
+            readonly
+            style="width: 18ch; user-select: all"
+          />
+          <button id="copy-secret-btn">Copy</button>
+        </div>
+      </div>
+
       <label for="2fa-code">Enter 2FA Code:</label>
-      <input style="outline: none;" type="text" id="2fa-code" maxlength="6" pattern="\d{6}" autocomplete="off" />
+      <input
+        style="outline: none"
+        type="text"
+        id="2fa-code"
+        maxlength="6"
+        pattern="\d{6}"
+        autocomplete="off"
+      />
       <button id="verify-2fa-btn" class="btn btn-primary">
         Verify & Enable
       </button>
-      <p id="statusMsg" style="margin-bottom: 30px;"></p>
+      <p id="statusMsg" style="margin-bottom: 30px"></p>
     </main>
 
     <!-- 
@@ -650,7 +671,8 @@
     <!-- 
     - custom js link
   -->
-    <script type="module" src="/assets/js/auth.js" defer></script>
+    <script type="module" src="./assets/js/enable-2fa.js"></script>
+    <script type="module" src="./assets/js/auth.js" defer></script>
     <script src="./assets/js/script.js" defer></script>
 
     <!-- 
@@ -715,61 +737,7 @@
         setTimeout(() => toast.classList.add("show"), 50);
       }
 
-      // ------------- Buy --------------------------------------
-      const cryptoSelect = document.getElementById("cryptoSelect");
-      const fiatAmountInput = document.getElementById("fiatAmount");
-      const buyButton = document.getElementById("buyButton");
-      const fiatCurrencySelect = document.getElementById("fiatCurrency");
-
-      // ----------- Sell ----------------------------------------
-      const sellCryptoSelect = document.getElementById("sellCryptoSelect");
-      const cryptoAmountIn = document.getElementById("cryptoAmount");
-      const sellButton = document.getElementById("sellButton");
-      const sellFiatSelect = document.getElementById("sellFiatCurrency");
-
-      function getStoredToken() {
-        const raw = localStorage.getItem("authToken");
-        if (!raw) return null;
-        try {
-          return JSON.parse(raw).token;
-        } catch {
-          return null;
-        }
-      }
-
-      async function ensure2FA() {
-        const token = getStoredToken();
-        if (!token) {
-          showToast("Please log in first", "warning");
-          setTimeout(() => (window.location.href = "/"), 1200);
-          window.location.href = "/login.html";
-          throw new Error("not-authenticated");
-        }
-
-        const resp = await fetch("/api/user/profile", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (resp.status === 401) {
-          showToast("Session expired, please log in again", "warning");
-          setTimeout(() => (window.location.href = "/"), 1200);
-          throw new Error("session-expired");
-        }
-        if (!resp.ok) {
-          throw new Error(`Unexpected error: ${resp.status}`);
-        }
-
-        const profile = await resp.json();
-        if (!profile.twoFAEnabled) {
-          showToast("Please enable 2FA first", "warning");
-          setTimeout(() => (window.location.href = "/enable-2fa.html"), 1200);
-          throw new Error("2fa-not-enabled");
-        }
-
-        return profile;
-      }
-
+    
       async function launchTransak(mode) {
         // ------- Buy Value -----------------------------
         const selectedCrypto = cryptoSelect.value.toUpperCase();
@@ -841,7 +809,7 @@
           widgetWidth: "450px",
           widgetHeight: "650px",
           redirectURL: "",
-          userData
+          userData,
         };
 
         if (mode === "BUY") {
