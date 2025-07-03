@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Email Confirmed | Xtera</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Email Verified | Xtera</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
@@ -32,12 +32,19 @@
       box-shadow: 0 12px 30px rgba(0, 94, 255, 0.15);
       overflow: hidden;
       position: relative;
+      border: 1px solid #e6f0ff;
+      animation: fadeIn 0.6s ease-out;
+      text-align: center;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     
     .header {
       background: linear-gradient(120deg, #005eff 0%, #1a75ff 100%);
       padding: 30px;
-      text-align: center;
       position: relative;
     }
     
@@ -64,18 +71,11 @@
       font-weight: 700;
       font-size: 28px;
       margin-bottom: 8px;
-    }
-    
-    .header p {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 16px;
-      max-width: 350px;
-      margin: 0 auto;
+      text-align: center;
     }
     
     .content {
       padding: 40px;
-      text-align: center;
     }
     
     .icon-container {
@@ -142,100 +142,94 @@
       font-size: 18px;
       color: #555;
       margin-bottom: 25px;
+      line-height: 1.6;
     }
     
-    .redirect-info {
+    .benefits {
       background: #f5f9ff;
       border-radius: 12px;
       padding: 20px;
       margin: 30px 0;
-      text-align: center;
+      text-align: left;
       border: 1px solid #e6f0ff;
     }
     
-    .redirect-info h3 {
+    .benefits h3 {
       color: #005eff;
       margin-bottom: 15px;
-      font-size: 18px;
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 10px;
+      font-size: 18px;
     }
     
-    .countdown {
-      font-size: 32px;
-      font-weight: 700;
-      color: #005eff;
-      margin: 15px 0;
+    .benefits ul {
+      list-style: none;
+      padding-left: 10px;
     }
     
-    .progress-bar {
-      height: 6px;
-      background: #e6f0ff;
-      border-radius: 3px;
-      overflow: hidden;
-      margin: 20px 0;
+    .benefits li {
+      margin-bottom: 12px;
+      padding-left: 30px;
+      position: relative;
+      line-height: 1.5;
     }
     
-    .progress {
-      height: 100%;
-      background: linear-gradient(90deg, #005eff, #1a75ff);
-      border-radius: 3px;
-      width: 100%;
-      animation: progressCountdown 5s linear forwards;
-    }
-    
-    @keyframes progressCountdown {
-      0% { width: 100%; }
-      100% { width: 0%; }
-    }
-    
-    .actions {
+    .benefits li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #00c853;
+      font-weight: bold;
+      font-size: 16px;
+      width: 22px;
+      height: 22px;
+      background: #e8f5e9;
+      border-radius: 50%;
       display: flex;
-      gap: 15px;
-      margin-top: 30px;
-      flex-wrap: wrap;
+      align-items: center;
       justify-content: center;
     }
     
     .btn {
-      padding: 14px 28px;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-    }
-    
-    .btn-primary {
+      gap: 10px;
+      padding: 14px 32px;
       background: linear-gradient(120deg, #005eff 0%, #1a75ff 100%);
       color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 16px;
+      text-decoration: none;
+      transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0, 94, 255, 0.3);
+      margin: 10px 0;
     }
     
-    .btn-primary:hover {
+    .btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 6px 20px rgba(0, 94, 255, 0.4);
     }
     
-    .btn-secondary {
-      background: white;
-      color: #005eff;
-      border: 1px solid #cce0ff;
+    .support-note {
+      margin-top: 25px;
+      font-size: 14px;
+      color: #666;
     }
     
-    .btn-secondary:hover {
-      background: #f5f9ff;
-      transform: translateY(-3px);
+    .support-note a {
+      color: #005eff;
+      text-decoration: none;
+      font-weight: 500;
     }
-   
+    
+    .support-note a:hover {
+      text-decoration: underline;
+    }
+    
     @media (max-width: 500px) {
       .header {
         padding: 25px 20px;
@@ -243,14 +237,6 @@
       
       .content {
         padding: 30px 20px;
-      }
-      
-      .actions {
-        flex-direction: column;
-      }
-      
-      .btn {
-        width: 100%;
       }
     }
   </style>
@@ -261,8 +247,7 @@
       <div class="logo">
         <img src="https://res.cloudinary.com/dcoxo8snb/image/upload/logo_ytvglm.png" alt="Xtera Logo">
       </div>
-      <h1>Email Confirmed</h1>
-      <p>Your account is now fully activated</p>
+      <h1>Email Verified</h1>
     </div>
     
     <div class="content">
@@ -273,45 +258,31 @@
         </div>
       </div>
       
-      <h2>Verification Successful!</h2>
-      <p>Thank you for verifying your email address. Your account is now fully activated and ready to use.</p>
+      <h2>Already Verified</h2>
+      <p>
+        Your email address has already been confirmed.<br>
+        No further action is needed.
+      </p>
       
-      <div class="redirect-info">
-        <h3><i class="fas fa-clock"></i> Redirecting to Sign In</h3>
-        <p>You'll be automatically redirected to the sign in page</p>
-        <div class="countdown" id="countdown">5</div>
-        <div class="progress-bar">
-          <div class="progress" id="progress"></div>
-        </div>
-        <p>Don't want to wait? Click below to go now</p>
+      <div class="benefits">
+        <h3><i class="fas fa-check-circle"></i> You now have:</h3>
+        <ul>
+          <li>Full access to all platform features</li>
+          <li>Enhanced security for your account</li>
+        </ul>
       </div>
       
-      <div class="actions">
-        <a href="/login.html" class="btn btn-primary">
-          <i class="fas fa-sign-in-alt"></i> Go to Sign In Now
-        </a>
-        <a href="/" class="btn btn-secondary">
-          <i class="fas fa-home"></i> Return to Homepage
-        </a>
+      <a href="/login.html" class="btn">
+        <i class="fas fa-sign-in-alt"></i> Go to Login
+      </a>
+      
+      <div class="support-note">
+        Need help? <a href="mailto:support@xtera.com">Contact our support team</a>
       </div>
     </div>
+  </div>
   
   <script>
-    // Countdown timer and redirect
-    let seconds = 5;
-    const countdownElement = document.getElementById('countdown');
-    const progressBar = document.getElementById('progress');
-    
-    const countdownInterval = setInterval(() => {
-      seconds--;
-      countdownElement.textContent = seconds;
-      
-      if (seconds <= 0) {
-        clearInterval(countdownInterval);
-        window.location.href = '/login.html';
-      }
-    }, 1000);
-    
     // Add animation to the checkmark
     document.querySelector('.checkmark-circle').addEventListener('animationend', () => {
       document.querySelector('.checkmark-circle').style.opacity = '0.2';

@@ -2,13 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const crypto = require("crypto");
-const mailer = require("../config/mailer");
 const { verifyMessage } = require("ethers");
 const jwt = require("jsonwebtoken");
 const speakeasy = require("speakeasy");
 const QRCode = require("qrcode");
 const User = require("../models/User");
 const Person = require("../models/Person");
+const { sendVerificationEmail, sendExpiredVerificationEmail } = require("../config/emailTemplate");
 const requireAuth = require("../middleware/requireAuth");
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -349,75 +349,9 @@ router.post("/register", async (req, res) => {
 
     const protocol = req.protocol;
     const host = req.get("host");
-    const confirmUrl = `${protocol}://${host}/api/confirm-email?token=${personDoc.verificationToken}`;
+    const confirmUrl = `${protocol}://${host}/api/confirm-email?token=${personDoc.verificationToken}&id=${personDoc._id}`;
 
-    const emailHtml = `
-    <div
-      style="
-        max-width:600px;
-        margin:0 auto;
-        font-family:Arial,sans-serif;
-        color:#333;
-        border:1px solid #e0e0e0;
-        border-radius:8px;
-        padding:2rem;
-        box-shadow:0 2px 8px rgba(0,0,0,0.05);
-      "
-    >
-      <div style="text-align:center; margin-bottom:2rem; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-        <img
-          src="https://res.cloudinary.com/dcoxo8snb/image/upload/v1747615055/logo-512_yvvclj.png"
-          alt="Xtera Logo"
-          width="48"
-          style="display:block;"
-        />
-        <h1 style="margin:0; font-size:1.5rem; color:#005eff;">Xtera</h1>
-      </div>
-
-      <p style="font-size:1rem; line-height:1.5;">
-        Hi <strong>${personDoc.firstName}</strong>,
-      </p>
-
-      <p style="font-size:1rem; line-height:1.5;">
-        Thanks for registering with Xtera! Please click the button below to confirm your email address and complete your account setup.
-      </p>
-
-      <div style="text-align:center; margin:2rem 0;">
-        <a
-          href="${confirmUrl}"
-          style="
-            display:inline-block;
-            text-decoration:none;
-            background-color:#005eff;
-            color:#ffffff;
-            padding:0.75rem 1.5rem;
-            border-radius:4px;
-            font-weight:bold;
-            font-size:1rem;
-          "
-        >
-          Confirm your email
-        </a>
-      </div>
-
-      <p style="font-size:0.9rem;color:#666;line-height:1.4;">
-        If that button doesn’t work, copy and paste this link into your browser:<br>
-        <a href="${confirmUrl}" style="color:#005eff;">${confirmUrl}</a>
-      </p>
-
-      <p style="font-size:0.8rem;color:#999;line-height:1.2;">
-        This link will expire in 24 hours.
-      </p>
-    </div>
-  `;
-
-    await mailer.sendMail({
-      to: personDoc.email,
-      from: '"Xtera" <judexchange@zohomail.com>',
-      subject: "Please confirm your email",
-      html: emailHtml,
-    });
-
+    await sendVerificationEmail(personDoc.email, personDoc.firstName, confirmUrl);
     await session.commitTransaction();
     session.endSession();
 
@@ -441,39 +375,78 @@ router.post("/register", async (req, res) => {
 });
 
 router.get("/confirm-email", async (req, res) => {
-  const token = req.query.token;
-  if (!token) {
-    return res.status(400).json({ message: "Verification token is required." });
+  const { token, id } = req.query;
+
+  if (!token || !id) {
+    return res.status(400).send("Missing token or user ID.");
   }
 
   try {
-    // look up a matching user with an unexpired token
-    const user = await Person.findOne({
-      verificationToken: token,
-      verificationExpires: { $gt: Date.now() },
-    });
-
-    if (!user) {
-      return res
-        .status(400)
-        .json({ message: "Invalid or expired verification token." });
+    const person = await Person.findById(id);
+    if (!person) {
+      return res.status(404).send("User not found.");
     }
 
-    // mark email as verified
-    user.emailVerified = true;
-    user.verificationToken = undefined;
-    user.verificationExpires = undefined;
-    await user.save();
+    if (person.emailVerified) {
+      return res.redirect("/email-already-verified.html");
+    }
+    if (
+      person.verificationToken !== token ||
+      person.verificationExpires < Date.now()
+    ) {
+      return res.redirect(`/token-expired.html?Id=${id}`);
+    }
 
-    // success → redirect to your frontend confirmation page:
+    person.emailVerified        = true;
+    person.verificationToken    = undefined;
+    person.verificationExpires  = undefined;
+    await person.save();
+
     return res.redirect("/email-confirmed.html");
   } catch (err) {
-    console.error("Error confirming email:", err);
+    console.error("Error in /confirm-email:", err);
     return res
       .status(500)
       .json({ message: "An error occurred while confirming your email." });
   }
 });
+
+
+router.get('/resend-verification', async (req, res) => {
+  const { Id } = req.query;
+
+  if (!Id) {
+    return res.status(400).json({ error: "Missing user ID" });
+  }
+
+  try {
+    const user = await Person.findById(Id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({ error: "Email already verified" });
+    }
+
+    user.verificationToken = crypto.randomBytes(32).toString('hex');
+    user.verificationExpires = Date.now() + 24 * 60 * 60 * 1000;
+    await user.save();
+
+    const protocol = req.protocol;
+    const host = req.get('host');
+    const confirmUrl = `${protocol}://${host}/api/confirm-email?token=${user.verificationToken}&id=${user._id}`;
+    
+    await sendExpiredVerificationEmail(user.email, user.firstName, confirmUrl)
+
+    res.redirect(`/verification-resent.html?email=${encodeURIComponent(user.email)}&id=${user._id}`);
+
+  } catch (error) {
+    console.error("Resend error:", error);
+    res.status(500).json({ error: "Error resending verification" });
+  }
+});
+
 
 router.get("/status", async (req, res) => {
   let address;

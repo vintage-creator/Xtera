@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verification Link Expired | Xtera</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #fff9f9 0%, #fff0f0 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(255, 0, 0, 0.08);
+      overflow: hidden;
+      position: relative;
+      border: 1px solid #ffe6e6;
+      animation: fadeIn 0.6s ease-out;
+      text-align: center;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .header {
+      background: linear-gradient(120deg, #ff4d4d 0%, #ff1a1a 100%);
+      padding: 30px;
+      position: relative;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .logo img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+    
+    .header h1 {
+      color: white;
+      font-weight: 700;
+      font-size: 28px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    
+    .content {
+      padding: 40px;
+    }
+    
+    .icon-container {
+      width: 100px;
+      height: 100px;
+      background: #ffebeb;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: -60px auto 25px;
+      position: relative;
+      border: 3px solid white;
+      box-shadow: 0 4px 15px rgba(255, 0, 0, 0.1);
+    }
+    
+    .icon {
+      font-size: 48px;
+      color: #ff4d4d;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    .content h2 {
+      color: #ff4d4d;
+      font-weight: 700;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+    
+    .content p {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+    
+    .resend-container {
+      margin: 40px 0 30px;
+    }
+    
+    .resend-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px 40px;
+      background: linear-gradient(120deg, #ff4d4d 0%, #ff1a1a 100%);
+      color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(255, 77, 77, 0.3);
+      margin: 0 auto;
+    }
+    
+    .resend-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 77, 77, 0.4);
+      background: linear-gradient(120deg, #ff3d3d 0%, #ff0a0a 100%);
+    }
+    
+    .resend-btn:active {
+      transform: translateY(1px);
+    }
+    
+    .info-box {
+      background: #fff5f5;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 40px 0 20px;
+      text-align: left;
+      border: 1px solid #ffe6e6;
+    }
+    
+    .info-box h3 {
+      color: #ff4d4d;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+    }
+    
+    .info-box ul {
+      list-style: none;
+      padding-left: 10px;
+    }
+    
+    .info-box li {
+      margin-bottom: 12px;
+      padding-left: 30px;
+      position: relative;
+      line-height: 1.5;
+    }
+    
+    .info-box li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #ff4d4d;
+      font-weight: bold;
+      font-size: 24px;
+      line-height: 1;
+    }
+    
+    .small-link {
+      display: block;
+      margin-top: 20px;
+      color: #005eff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .small-link:hover {
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 500px) {
+      .header {
+        padding: 25px 20px;
+      }
+      
+      .content {
+        padding: 30px 20px;
+      }
+      
+      .resend-btn {
+        width: 100%;
+        padding: 14px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <img src="https://res.cloudinary.com/dcoxo8snb/image/upload/logo_ytvglm.png" alt="Xtera Logo">
+      </div>
+      <h1>Link Expired</h1>
+    </div>
+    
+    <div class="content">
+      <div class="icon-container">
+        <i class="fas fa-hourglass-end icon"></i>
+      </div>
+      
+      <h2>Verification Link Expired</h2>
+      <p>This verification link is no longer valid. Verification links expire after 24 hours for security reasons.</p>
+      
+      <div class="resend-container">
+        <a id="resend-link" href="#" class="resend-btn">
+          <i class="fas fa-paper-plane"></i> Resend Verification Email
+        </a>
+      </div>
+      
+      <div class="info-box">
+        <h3><i class="fas fa-info-circle"></i> What to do next</h3>
+        <ul>
+          <li>Click the button above to receive a new verification email</li>
+          <li>Check your spam/junk folder if you don't see the email</li>
+          <li>Complete verification within 24 hours of receiving the new email</li>
+          <li>Contact support if you continue to experience issues</li>
+        </ul>
+      </div>
+      
+      <a href="/" class="small-link">
+        <i class="fas fa-arrow-left"></i> Return to homepage
+      </a>
+    </div>
+  </div>
+  
+  <script>
+    // Get the Id from the query string
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get("Id");
+    
+    // Handle the resend link
+    const resendLink = document.getElementById("resend-link");
+    
+    if (userId) {
+      // Construct the GET request with the user ID
+      resendLink.href = `/api/resend-verification?Id=${userId}`;
+      
+      // Add click handler for visual feedback
+      resendLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Change button to loading state
+        const originalHtml = resendLink.innerHTML;
+        resendLink.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending new email...';
+        resendLink.style.opacity = '0.8';
+        resendLink.style.pointerEvents = 'none';
+        
+        // Simulate API call
+        setTimeout(() => {
+          // In a real application, this would be an actual API call
+          fetch(resendLink.href)
+            .then(response => {
+              if (response.ok) {
+                // Show success message
+                resendLink.innerHTML = '<i class="fas fa-check"></i> Email Sent!';
+                resendLink.style.background = 'linear-gradient(120deg, #00c853 0%, #009624 100%)';
+                
+                // Revert after delay
+                setTimeout(() => {
+                  resendLink.innerHTML = originalHtml;
+                  resendLink.style.opacity = '1';
+                  resendLink.style.pointerEvents = 'auto';
+                  resendLink.style.background = 'linear-gradient(120deg, #ff4d4d 0%, #ff1a1a 100%)';
+                }, 3000);
+              } else {
+                throw new Error('Failed to resend email');
+              }
+            })
+            .catch(error => {
+              console.error('Resend error:', error);
+              resendLink.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed - Try Again';
+              resendLink.style.opacity = '1';
+              resendLink.style.pointerEvents = 'auto';
+              
+              // Revert after delay
+              setTimeout(() => {
+                resendLink.innerHTML = originalHtml;
+              }, 2000);
+            });
+        }, 1000);
+      });
+    } else {
+      // Disable button if no user ID
+      resendLink.innerHTML = '<i class="fas fa-exclamation-circle"></i> Unable to Resend';
+      resendLink.style.opacity = '0.6';
+      resendLink.style.pointerEvents = 'none';
+      resendLink.style.background = '#cccccc';
+      
+      console.error("No Id found in URL");
+    }
+  </script>
+</body>
+</html>
