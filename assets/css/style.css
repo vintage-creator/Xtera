@@ -26,6 +26,15 @@
   --white_10: hsla(0, 0%, 100%, 0.1);
   --black_10: hsla(0, 0%, 0%, 0.1);
   --white: hsl(0, 0%, 100%);
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --secondary: #6366f1;
+  --dark: #1e293b;
+  --light: #f8fafc;
+  --gray: #94a3b8;
+  --eth-gradient: linear-gradient(135deg, #3c3c3d, #8c8c8e);
+  --sol-gradient: linear-gradient(135deg, #00ffa3, #dc1fff);
+  --border-radius: 16px;
 
   /**
    * gradient color
@@ -132,7 +141,6 @@ button {
 ion-icon {
   pointer-events: none;
 }
-
 
 address {
   font-style: normal;
@@ -402,7 +410,6 @@ body.active {
   font-weight: bold;
 }
 
-
 /*   Wallet   */
 .btn-danger {
   background-color: #e74c3c;
@@ -474,7 +481,7 @@ body.active {
   height: 1px;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0,0,0,0);
+  clip: rect(0, 0, 0, 0);
   white-space: nowrap;
 }
 
@@ -489,7 +496,6 @@ body.active {
     transform: translateY(0);
   }
 }
-
 
 /* General Modal Styling */
 .modal-wrapper {
@@ -553,7 +559,7 @@ body.active {
 .purchase-btn {
   width: 100%;
   padding: 12px;
-  background-color: #4CAF50;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
   color: white;
   border: none;
   border-radius: 4px;
@@ -564,7 +570,6 @@ body.active {
 .purchase-btn:hover {
   background-color: #45a049;
 }
-
 
 /*-----------------------------------*\
   #HEADER
@@ -1055,14 +1060,14 @@ body.active {
   border-radius: 50px;
 }
 
- /* Stepper indicators */
- .signup-card {
-  max-width: 600px!important;
+/* Stepper indicators */
+.signup-card {
+  max-width: 600px !important;
   margin: 120px auto;
   padding: 2rem;
   background: #fff;
   border-radius: 1rem;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
   font-family: system-ui, sans-serif;
   color: #333;
 }
@@ -1072,9 +1077,9 @@ body.active {
 #signupForm input:focus,
 #signupForm select:focus {
   border-color: #2a5ada;
-  box-shadow: 0 0 0 3px rgba(42,90,218,0.2);
+  box-shadow: 0 0 0 3px rgba(42, 90, 218, 0.2);
 }
- .stepper {
+.stepper {
   display: flex;
   justify-content: space-between;
   margin-bottom: 2rem;
@@ -1086,37 +1091,46 @@ body.active {
   text-align: center;
 }
 .stepper li::before {
-  content: counter(step) " ";    
+  content: counter(step) " ";
   counter-increment: step;
-  display: inline-flex;            
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2rem;                  
+  min-width: 2rem;
   height: 2rem;
-  padding: 0 0.5rem;               
+  padding: 0 0.5rem;
   line-height: 2rem;
   border: 2px solid var(--blue-crayola);
   border-radius: 50%;
   background: white;
   color: var(--blue-crayola);
   font-weight: var(--fw-700);
-  margin-right: 0.75rem;            
+  margin-right: 0.75rem;
 }
 
 .stepper li::after {
   content: "";
   position: absolute;
-  top: 1rem; left: calc(50% + 1rem);
-  width: calc(100% - 2rem); height: 2px;
+  top: 1rem;
+  left: calc(50% + 1rem);
+  width: calc(100% - 2rem);
+  height: 2px;
   background: var(--blue-crayola);
   z-index: -1;
 }
-.stepper li:last-child::after { display: none; }
-.stepper li.completed::before { background: var(--blue-crayola); color: white; }
-.stepper li.completed + li::after { background: var(--blue-crayola); }
+.stepper li:last-child::after {
+  display: none;
+}
+.stepper li.completed::before {
+  background: var(--blue-crayola);
+  color: white;
+}
+.stepper li.completed + li::after {
+  background: var(--blue-crayola);
+}
 /* Hide all step sections by default */
-.form-step { 
-  display: none; 
+.form-step {
+  display: none;
   margin-top: 1.5rem;
 }
 .stepper li.active::before {
@@ -1124,21 +1138,27 @@ body.active {
 }
 
 @keyframes popIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to   { transform: scale(1);   opacity: 1; }
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 #prevBtn {
-  background: #fff;                          
-  color: var(--blue-crayola);                
-  border: 2px solid var(--blue-crayola);    
+  background: #fff;
+  color: var(--blue-crayola);
+  border: 2px solid var(--blue-crayola);
 }
 
 #prevBtn:hover:not([disabled]) {
-  background: rgba(42, 90, 218, 0.1);         
+  background: rgba(42, 90, 218, 0.1);
 }
 
 #prevBtn:disabled {
-  background: #f9f9f9;                       
+  background: #f9f9f9;
   color: #aaa;
   border-color: #ddd;
   cursor: none;
@@ -1163,17 +1183,19 @@ select:invalid::-webkit-validation-bubble-arrow {
   display: none;
 }
 
-.form-step.active { display: block; }
+.form-step.active {
+  display: block;
+}
 /* Navigation buttons */
 .form-nav {
   margin: 1.5rem 0 2.5rem;
-  display: flex; 
+  display: flex;
   justify-content: space-between;
-  gap: 5rem;  
+  gap: 5rem;
 }
 .form-nav button {
-  flex: 1 1 0;       
-  min-width: 0;       
+  flex: 1 1 0;
+  min-width: 0;
   padding: 0.75rem 0;
   background: var(--blue-crayola);
   color: #fff;
@@ -1181,12 +1203,11 @@ select:invalid::-webkit-validation-bubble-arrow {
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: background .3s, transform .2s;
+  transition: background 0.3s, transform 0.2s;
 }
 .form-nav button:hover {
   background-color: rgb(11, 79, 239);
 }
- 
 
 /*-----------------------------------*\
   Sign In Style
@@ -1199,7 +1220,7 @@ select:invalid::-webkit-validation-bubble-arrow {
   padding: 2rem;
   background: #fff;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 .main-signin h1 {
   text-align: center;
@@ -1327,6 +1348,8 @@ select:invalid::-webkit-validation-bubble-arrow {
   transform: none;
 }
 
+
+
 /* Responsive: On very narrow screens, stack buttons full-width */
 @media (max-width: 480px) {
   .wallet-icon-btn {
@@ -1338,9 +1361,21 @@ select:invalid::-webkit-validation-bubble-arrow {
   .wallet-connect {
     gap: 1rem;
   }
-  main-signin p.note {
+  .main-signin p.note {
     font-size: 1.2rem;
     margin: 1.5rem auto 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-signin {
+    width: 100%,;
+    max-width: 100%;
+    margin: 0;
+    padding: 2rem 1rem;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100vh;
   }
 }
 
@@ -1449,7 +1484,8 @@ address.footer-contact-link {
     font-size: 2.5rem;
     margin-top: 1rem;
   }
-  .main-signin p.intro, .main-signin p.intro a {
+  .main-signin p.intro,
+  .main-signin p.intro a {
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
   }
@@ -1466,7 +1502,7 @@ address.footer-contact-link {
   }
   .signup-card {
     padding: 1.5rem;
-    max-width: 90%!important;
+    max-width: 90% !important;
   }
   .signup-card h1 {
     font-size: 2.5rem;
@@ -1475,7 +1511,7 @@ address.footer-contact-link {
     flex-direction: column;
   }
   .stepper li::after {
-    display: none;  /* vertical stepper on mobile */
+    display: none; /* vertical stepper on mobile */
   }
   .field-group.half {
     width: 100%;
@@ -1555,8 +1591,8 @@ address.footer-contact-link {
 
   .form-nav.single #nextBtn {
     flex: 1 1 auto !important;
-    width: 100%        !important;
-    max-width: none    !important;
+    width: 100% !important;
+    max-width: none !important;
   }
 
   /**
