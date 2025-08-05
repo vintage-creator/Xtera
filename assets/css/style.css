@@ -1361,6 +1361,10 @@ select:invalid::-webkit-validation-bubble-arrow {
   .wallet-connect {
     gap: 1rem;
   }
+  .main-signin {
+    width: 100%,;
+    max-width: 100px;
+  }
   .main-signin p.note {
     font-size: 1.2rem;
     margin: 1.5rem auto 1rem;
